@@ -327,9 +327,6 @@ export default function UserHome() {
 
       const response = await fetch(`${BACKEND_URL}/api/toilets`, {
         method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
       });
 
       if (!response.ok) {
