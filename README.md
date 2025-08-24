@@ -153,9 +153,3 @@ npx expo start
 
 - Email: `demo-moderator@nahi.toilets`
 - Password: `Demo@12345`
-
-## 🌐 Live Demo
-
-- **Admin Panel:** [https://nhai-toilets-webapp.onrender.com/](https://nhai-toilets-webapp.onrender.com/)
-- **Android APK:** [Download APK here]
-- **Backend API:** [https://nhai-toilets.onrender.com](https://nhai-toilets.onrender.com)
