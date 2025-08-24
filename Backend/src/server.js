@@ -19,17 +19,16 @@ app.use(cookieParser());
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ limit: "10mb", extended: true }));
 
-// ✅ Correct CORS for mobile + web with credentials
+// ✅ Simple CORS - This will work for all scenarios
 app.use(
   cors({
     origin: function (origin, callback) {
-      // Allow requests with no origin (mobile apps, Postman, server-to-server)
-      if (!origin) return callback(null, true);
-
-      // Allow any origin for now - you can add whitelist later
-      return callback(null, origin);
+      // Always allow requests - for development and testing
+      callback(null, true);
     },
     credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization", "Cookie"],
   })
 );
 
@@ -63,4 +62,4 @@ setInterval(async () => {
   } catch (err) {
     console.error("Keep-alive failed:", err.message);
   }
-}, 1000 * 60 * 18); // 18 minutes
+}, 1000 * 60 * 18);
