@@ -189,7 +189,7 @@ export default function LandingPage() {
 
                 <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 leading-tight">
                   <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-                    Highway Toilet
+                    Highway Toilets
                   </span>
                   <br />
                   <span className="text-xl lg:text-2xl text-gray-700">
