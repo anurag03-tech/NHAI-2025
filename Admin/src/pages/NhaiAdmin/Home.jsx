@@ -119,9 +119,6 @@ const createCustomIcon = (status, isSelected = false) => {
   });
 };
 
-// Configure axios defaults for cookies
-axios.defaults.withCredentials = true;
-
 const NhaiAdminHome = () => {
   const [toilets, setToilets] = useState([]);
   const [loading, setLoading] = useState(true);

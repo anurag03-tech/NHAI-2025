@@ -112,7 +112,6 @@ const Moderators = () => {
           email: newModerator.email.trim(),
         },
         {
-          withCredentials: true,
           headers: {
             "Content-Type": "application/json",
           },

@@ -72,9 +72,6 @@ L.Icon.Default.mergeOptions({
     "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png",
 });
 
-// Configure axios defaults for cookies
-axios.defaults.withCredentials = true;
-
 const AllToilets = () => {
   const [toilets, setToilets] = useState([]);
   const [loading, setLoading] = useState(true);
