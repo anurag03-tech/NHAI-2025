@@ -2,7 +2,12 @@
 
 A comprehensive toilet management system for NHAI (National Highways Authority of India) consisting of an admin panel, backend API, and mobile application.
 
-## 🏗️ Project Structure
+## 🚀 Get Started
+
+- 📱 **Mobile App for Users (Highway Travelers):** [Download Android APK](https://drive.google.com/file/d/1gwN6LDuOGszCzBJ49tpcCIHqDoa_PC9O/view?usp=sharing)
+- 🔧 **Webapp for Moderators & NHAI Administrators:** [nhai-toilets-webapp.onrender.com](https://nhai-toilets-webapp.onrender.com)
+
+## 🏗️ System Architecture
 
 ```
 NHAI-2025/
@@ -12,6 +17,59 @@ NHAI-2025/
 └── README.md       # This file
 ```
 
+### 1. 📱 Mobile App (React Native + Expo)
+
+**For Users - Cross-platform mobile application for highway travelers**
+
+**Features:**
+
+- 📍 Find Nearby Toilets - Locate facilities along your route with real-time GPS tracking
+- 🌐 Real-time Updates - Get current facility status, cleanliness, and availability
+- ⭐ Rate & Review - Share your experience and help improve facilities for everyone
+- ⚠️ Submit Complaints - Report facility issues, cleanliness problems, and maintenance concerns
+
+**Tech Stack:** React Native, Expo, Google Maps API, Real-time location services, Cross-platform compatibility (iOS/Android)
+
+### 2. 🖥️ Moderator Web Dashboard (React + Vite)
+
+**For Moderators - Facility management and user support interface**
+
+**Features:**
+
+- 🛡️ Facility Management - Add and update toilet information and details
+- 💬 Resolve User Complaints - Handle and respond to facility-related issues
+- ✅ Status Updates - Maintain real-time facility availability status
+- ⭐ Review Monitoring - Oversee and manage user feedback and ratings
+
+**Tech Stack:** React 18, Vite, Material-UI/Tailwind CSS
+
+### 3. 🏛️ Admin Control Panel (React + Vite)
+
+**For NHAI Admins - Comprehensive system oversight and management**
+
+**Features:**
+
+- 📊 Dashboard Control - Centralized management of all highway facilities
+- 📈 Analytics & Reports - Comprehensive moderator statistics and performance metrics
+- 🗨️ Complaint Resolution - Efficient handling of user feedback and issues
+- 🚫 Send Penalties - Issue penalties for moderator violations and non-compliance
+
+**Tech Stack:** React 18, Vite, Material-UI/Tailwind CSS
+
+### 4. 🔧 Backend API (Node.js + Express)
+
+**RESTful API server handling all business logic and database operations**
+
+**Features:**
+
+- 🔐 JWT Authentication - Secure user authentication and session management
+- 📧 Email Notifications - Automated alerts and communication system
+- 👥 Role-based Access Control - Multi-level user permissions (User/Moderator/Admin)
+- 🗄️ MongoDB Integration - Scalable database operations and data management
+- 🔗 RESTful Endpoints - Clean API architecture for all platform interactions
+
+**Tech Stack:** Node.js, Express.js, MongoDB, JWT authentication, Email service integration, RESTful API design
+
 ## 🚀 Quick Start
 
 ### Clone Repository
@@ -20,48 +78,6 @@ NHAI-2025/
 git clone https://github.com/anurag03-tech/NHAI-2025.git
 cd NHAI-2025
 ```
-
-## 📱 Components Overview
-
-### 1. Admin Panel (React + Vite)
-
-Web-based dashboard for managing toilets, users, and monitoring system analytics.
-
-**Features:**
-
-- User authentication (Admin/Moderator roles)
-- Toilet location management
-- Real-time analytics
-- User management
-
-**Tech Stack:** React, Vite, Material-UI/Tailwind CSS
-
-### 2. Backend API (Node.js + Express)
-
-RESTful API server handling all business logic and database operations.
-
-**Features:**
-
-- JWT authentication
-- Email notifications
-- Role-based access control
-- MongoDB integration
-- RESTful endpoints
-
-**Tech Stack:** Node.js, Express.js, MongoDB, Mongoose, JWT
-
-### 3. Mobile App (React Native + Expo)
-
-Cross-platform mobile application for end users to locate and rate toilets.
-
-**Features:**
-
-- Google Maps integration
-- Location-based toilet search
-- User reviews and ratings
-- Real-time navigation
-
-**Tech Stack:** React Native, Expo, Google Maps API
 
 ## 🔧 Environment Setup
 
@@ -140,6 +156,6 @@ npx expo start
 
 ## 🌐 Live Demo
 
-- **Admin Panel:** [Deploy your admin panel here](https://nhai-toilets-webapp.onrender.com/)
-- **Android API:**
+- **Admin Panel:** [https://nhai-toilets-webapp.onrender.com/](https://nhai-toilets-webapp.onrender.com/)
+- **Android APK:** [Download APK here]
 - **Backend API:** [https://nhai-toilets.onrender.com](https://nhai-toilets.onrender.com)
