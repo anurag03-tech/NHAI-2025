@@ -19,11 +19,17 @@ app.use(cookieParser());
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ limit: "10mb", extended: true }));
 
-// ✅ Simplified CORS - perfect for mobile apps and web
+// ✅ Correct CORS for mobile + web with credentials
 app.use(
   cors({
-    origin: true, // Allow any origin
-    credentials: true, // Allow cookies/credentials
+    origin: function (origin, callback) {
+      // Allow requests with no origin (mobile apps, Postman, server-to-server)
+      if (!origin) return callback(null, true);
+
+      // Allow any origin for now - you can add whitelist later
+      return callback(null, origin);
+    },
+    credentials: true,
   })
 );
 
