@@ -84,11 +84,7 @@ const AllComplaints = () => {
       setLoading(true);
       console.log("Fetching all complaints...");
 
-      const response = await axios.get(`${BACKEND_URL}/api/complaints`, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await axios.get(`${BACKEND_URL}/api/complaints`, {});
 
       console.log("API Response:", response.data);
 

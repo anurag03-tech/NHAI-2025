@@ -45,11 +45,7 @@ const AdminPenalties = () => {
       setLoading(true);
       console.log("Fetching all penalties...");
 
-      const response = await axios.get(`${BACKEND_URL}/api/penalties`, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await axios.get(`${BACKEND_URL}/api/penalties`, {});
 
       console.log("API Response:", response.data);
 
