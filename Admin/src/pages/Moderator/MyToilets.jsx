@@ -1,0 +1,860 @@
+import React, { useState, useEffect } from "react";
+import { useAuth } from "../../contexts/AuthContext";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { toast } from "sonner";
+import {
+  Search,
+  MapPin,
+  Calendar,
+  Eye,
+  Filter,
+  Loader2,
+  ImageIcon,
+  Navigation,
+  Star,
+  MessageCircle,
+  RefreshCw,
+  Package,
+  Users,
+  Clock,
+  CheckCircle,
+  XCircle,
+  Settings,
+  Plus,
+  Camera,
+} from "lucide-react";
+import axios from "axios";
+
+// Leaflet imports
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import "leaflet/dist/leaflet.css";
+import L from "leaflet";
+
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
+axios.defaults.withCredentials = true;
+
+// Fix Leaflet marker icons
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl:
+    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon-2x.png",
+  iconUrl:
+    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png",
+  shadowUrl:
+    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png",
+});
+
+// Configure axios defaults for cookies
+axios.defaults.withCredentials = true;
+
+const MyToilets = () => {
+  const { user } = useAuth();
+  const [toilets, setToilets] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterStatus, setFilterStatus] = useState("all");
+  const [selectedToilet, setSelectedToilet] = useState(null);
+  const [showDetailsDialog, setShowDetailsDialog] = useState(false);
+
+  useEffect(() => {
+    fetchMyToilets();
+  }, []);
+
+  const fetchMyToilets = async () => {
+    try {
+      setLoading(true);
+      console.log("Fetching toilets for user:", user);
+
+      const response = await axios.get(`${BACKEND_URL}/api/toilets/my`, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      console.log("API Response:", response.data);
+
+      // Backend returns array directly
+      if (Array.isArray(response.data)) {
+        setToilets(response.data);
+        toast.success(
+          `Found ${response.data.length} toilet${
+            response.data.length !== 1 ? "s" : ""
+          }`
+        );
+      } else {
+        console.warn("Unexpected response format:", response.data);
+        setToilets([]);
+        toast.error("Unexpected response format from server");
+      }
+    } catch (error) {
+      console.error("Error fetching toilets:", error);
+
+      if (error.response) {
+        console.error("Error response:", error.response.data);
+        const errorMessage =
+          error.response.data?.message ||
+          error.response.data?.error ||
+          `Server error: ${error.response.status}`;
+        toast.error(errorMessage);
+
+        // If unauthorized, might need to redirect to login
+        if (error.response.status === 401) {
+          toast.error("Session expired. Please login again.");
+        }
+      } else if (error.request) {
+        toast.error("Network error. Please check your connection.");
+        console.error("Network error:", error.request);
+      } else {
+        toast.error("Failed to fetch toilets. Please try again.");
+      }
+      setToilets([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
+
+  const getStatusBadgeVariant = (status) => {
+    switch (status) {
+      case "Open":
+        return "default";
+      case "Closed":
+        return "destructive";
+      case "Under Maintenance":
+        return "secondary";
+      default:
+        return "outline";
+    }
+  };
+
+  const getStatusIcon = (status) => {
+    switch (status) {
+      case "Open":
+        return <CheckCircle className="h-4 w-4" />;
+      case "Closed":
+        return <XCircle className="h-4 w-4" />;
+      case "Under Maintenance":
+        return <Settings className="h-4 w-4" />;
+      default:
+        return <Clock className="h-4 w-4" />;
+    }
+  };
+
+  const getIconBgColor = (status) => {
+    switch (status) {
+      case "Total":
+        return "bg-blue-100";
+      case "Open":
+        return "bg-green-100";
+      case "Closed":
+        return "bg-red-100";
+      case "Under Maintenance":
+        return "bg-orange-100";
+      default:
+        return "bg-gray-100";
+    }
+  };
+
+  const getTypeBadgeVariant = (type) => {
+    switch (type) {
+      case "Gents":
+        return "default";
+      case "Ladies":
+        return "default";
+      case "Unisex":
+        return "default";
+      default:
+        return "default";
+    }
+  };
+
+  // Helper function to render toilet types (handles both array and string)
+  const renderToiletTypes = (types) => {
+    // Handle both array and string formats for backward compatibility
+    const typeArray = Array.isArray(types) ? types : [types];
+
+    return typeArray.map((type, index) => (
+      <Badge
+        key={`${type}-${index}`}
+        variant={getTypeBadgeVariant(type)}
+        className="font-medium"
+      >
+        <Users className="h-3 w-3 mr-1" />
+        {type}
+      </Badge>
+    ));
+  };
+
+  // Helper function to get toilet types as string for search
+  const getTypesAsString = (types) => {
+    const typeArray = Array.isArray(types) ? types : [types];
+    return typeArray.join(", ");
+  };
+
+  const calculateAverageRating = (reviews) => {
+    if (!reviews || reviews.length === 0) return 0;
+    const sum = reviews.reduce((acc, review) => acc + review.rating, 0);
+    return (sum / reviews.length).toFixed(1);
+  };
+
+  const openGoogleMaps = (lat, lng) => {
+    const url = `https://www.google.com/maps?q=${lat},${lng}`;
+    window.open(url, "_blank");
+  };
+
+  const handleViewDetails = (toilet) => {
+    setSelectedToilet(toilet);
+    setShowDetailsDialog(true);
+  };
+
+  // Filter toilets based on search and status (updated to handle multiple types)
+  const filteredToilets = toilets.filter((toilet) => {
+    const typesString = getTypesAsString(toilet.type).toLowerCase();
+
+    const matchesSearch =
+      toilet.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      toilet.highway.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      toilet.location.address
+        ?.toLowerCase()
+        .includes(searchTerm.toLowerCase()) ||
+      typesString.includes(searchTerm.toLowerCase());
+
+    const matchesFilter =
+      filterStatus === "all" || toilet.status === filterStatus;
+
+    return matchesSearch && matchesFilter;
+  });
+
+  // Calculate statistics
+  const getStats = () => {
+    const total = toilets.length;
+    const open = toilets.filter((t) => t.status === "Open").length;
+    const closed = toilets.filter((t) => t.status === "Closed").length;
+    const maintenance = toilets.filter(
+      (t) => t.status === "Under Maintenance"
+    ).length;
+
+    return {
+      Total: total,
+      Open: open,
+      Closed: closed,
+      "Under Maintenance": maintenance,
+    };
+  };
+
+  const statusCounts = getStats();
+
+  if (loading) {
+    return (
+      <div className="p-2">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4 ">
+          <div className="space-y-1 p-1 py-0">
+            <h1 className="text-3xl font-bold text-blue-500">My Toilets</h1>
+            <p className="text-blue-500 text font-medium">
+              Manage and monitor your toilet listings
+            </p>
+          </div>
+        </div>
+        <div className="flex items-center justify-center min-h-[400px]">
+          <div className="text-center">
+            <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-blue-500" />
+            <p className="text-gray-600">Loading Your Toilets...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen p-2">
+      <div className="container  max-w-7xl">
+        {/* Header */}
+        <div className="space-y-1 px-1 mb-4">
+          <h1 className="text-3xl font-bold text-blue-500">My Toilets</h1>
+          <p className="text-blue-500 text font-medium">
+            Manage and monitor your toilet listings
+          </p>
+        </div>
+
+        {/* Stats Cards - Enhanced colors */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-1">
+          {Object.entries(statusCounts).map(([status, count], index) => (
+            <div
+              key={status}
+              className="bg-white/90 backdrop-blur-sm rounded-xl p-4 border-1 border-gray-300 group cursor-pointer shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <div
+                    className={`p-2 rounded-lg ${getIconBgColor(
+                      status
+                    )} group-hover:scale-110 transition-transform duration-200 shadow-sm`}
+                  >
+                    {getStatusIcon(status)}
+                  </div>
+                  <div>
+                    <p className="text-2xl font-bold text-slate-800 group-hover:text-slate-600 transition-colors">
+                      {count}
+                    </p>
+                    <p className="text-xs text-slate-600 font-medium">
+                      {status}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Search and Filter */}
+        <div className="flex flex-col lg:flex-row gap-4 py-2 mb-1 ">
+          <div className="flex-1 relative w-full">
+            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-blue-500 h-5 w-5" />
+            <Input
+              placeholder="Search by name, highway, address, or toilet type..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-12 h-10 border border-blue-500 bg-white rounded-2xl placeholder:text-gray-400 shadow-sm "
+            />
+            {searchTerm && (
+              <button
+                onClick={() => setSearchTerm("")}
+                className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-red-500 transition-colors"
+              >
+                <XCircle className="h-4 w-4" />
+              </button>
+            )}
+          </div>
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 ">
+              <Filter className="h-4 w-4 text-slate-500" />
+              <Select value={filterStatus} onValueChange={setFilterStatus}>
+                <SelectTrigger className="w-48 border-2 border-slate-200 focus:border-blue-400 rounded-xl">
+                  <SelectValue placeholder="Filter by status" />
+                </SelectTrigger>
+                <SelectContent className="bg-white/95 backdrop-blur-sm border-slate-200 shadow-xl rounded-xl">
+                  <SelectItem value="all">All Status</SelectItem>
+                  <SelectItem value="Open">Open</SelectItem>
+                  <SelectItem value="Closed">Closed</SelectItem>
+                  <SelectItem value="Under Maintenance">
+                    Under Maintenance
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <Badge variant="outline" className="bg-white p-2">
+              {filteredToilets.length} result
+              {filteredToilets.length !== 1 ? "s" : ""}
+            </Badge>
+          </div>
+        </div>
+
+        {/* Toilets List - One Per Row */}
+        {filteredToilets.length === 0 ? (
+          <Card className="bg-white/90 backdrop-blur-sm border-0 shadow-md">
+            <CardContent className="p-12">
+              <div className="text-center">
+                <div className="relative mb-6">
+                  <div className="w-24 h-24 mx-auto bg-slate-100 rounded-full flex items-center justify-center">
+                    <MapPin className="h-12 w-12 text-slate-400" />
+                  </div>
+                </div>
+                <h3 className="text-xl font-semibold text-slate-700 mb-3">
+                  {toilets.length === 0
+                    ? "No Toilets Added Yet"
+                    : "No Matching Results"}
+                </h3>
+                <p className="text-slate-500 mb-6 max-w-md mx-auto">
+                  {toilets.length === 0
+                    ? "Start building your toilet network by adding your first location. Help travelers find clean facilities!"
+                    : "Try adjusting your search terms or filter criteria to find what you're looking for."}
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        ) : (
+          <div className="space-y-4">
+            {filteredToilets.map((toilet) => (
+              <Card
+                key={toilet._id}
+                className="bg-white/90 backdrop-blur-sm border-0 p-0 shadow-md hover:shadow-xl transition-all duration-300 hover:scale-[1.01] group"
+              >
+                <CardContent className="p-2 m-1">
+                  <div className="flex flex-col lg:flex-row gap-6">
+                    {/* Image Section */}
+                    <div className="lg:w-72 lg:h-48 w-full h-56 rounded-xl overflow-hidden bg-slate-100 border-2 border-slate-200 flex-shrink-0">
+                      {toilet.images && toilet.images.length > 0 ? (
+                        <img
+                          src={`data:image/jpeg;base64,${toilet.images[0].data}`}
+                          alt={toilet.name}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100">
+                          <div className="text-center">
+                            <Camera className="h-10 w-10 text-slate-400 mx-auto mb-2" />
+                            <p className="text-sm text-slate-500">No Image</p>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Content Section */}
+                    <div className="flex-1 space-y-4">
+                      {/* Header */}
+                      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+                        <div>
+                          <h3 className="text-xl font-bold text-slate-700 group-hover:text-blue-600 transition-colors mb-1">
+                            {toilet.name}
+                          </h3>
+                          <div className="flex items-center gap-2">
+                            <div className="p-1.5 bg-blue-100 rounded-lg">
+                              <Navigation className="h-3 w-3 text-blue-600" />
+                            </div>
+                            <p className="text-sm font-medium text-slate-600">
+                              {toilet.highway}
+                            </p>
+                          </div>
+                        </div>
+                        <Badge
+                          variant={getStatusBadgeVariant(toilet.status)}
+                          className="flex items-center gap-1 font-medium self-start"
+                        >
+                          {getStatusIcon(toilet.status)}
+                          {toilet.status}
+                        </Badge>
+                      </div>
+
+                      {/* Details Row */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {/* Location */}
+                        <div className="flex items-start gap-3 p-3 bg-slate-50 rounded-lg">
+                          <MapPin className="h-4 w-4 text-slate-500 mt-0.5 flex-shrink-0" />
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-mono text-slate-600 mb-1">
+                              {toilet.location.latitude.toFixed(4)},{" "}
+                              {toilet.location.longitude.toFixed(4)}
+                            </p>
+                            {toilet.location.address && (
+                              <p className="text-xs text-slate-500 line-clamp-2">
+                                {toilet.location.address}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Type and Features */}
+                        <div className="space-y-2">
+                          <div className="flex flex-wrap gap-2">
+                            {/* Render multiple types */}
+                            {renderToiletTypes(toilet.type)}
+                            {toilet.accessible && (
+                              <Badge
+                                variant="outline"
+                                className="bg-green-50 text-green-700 border-green-200"
+                              >
+                                Accessible
+                              </Badge>
+                            )}
+                          </div>
+                          {toilet.images && toilet.images.length > 0 && (
+                            <Badge
+                              variant="outline"
+                              className="bg-purple-50 text-purple-700 border-purple-200"
+                            >
+                              <ImageIcon className="h-3 w-3 mr-1" />
+                              {toilet.images.length} photo
+                              {toilet.images.length !== 1 ? "s" : ""}
+                            </Badge>
+                          )}
+                        </div>
+
+                        {/* Reviews and Date */}
+                        <div className="space-y-2">
+                          {toilet.reviews && toilet.reviews.length > 0 ? (
+                            <div className="flex items-center gap-4 p-2 bg-yellow-50 rounded-lg border border-yellow-200">
+                              <div className="flex items-center gap-1">
+                                <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                                <span className="font-semibold text-yellow-700 text-sm">
+                                  {calculateAverageRating(toilet.reviews)}
+                                </span>
+                              </div>
+                              <div className="flex items-center gap-1 text-yellow-600">
+                                <MessageCircle className="h-3 w-3" />
+                                <span className="text-xs">
+                                  {toilet.reviews.length} review
+                                  {toilet.reviews.length !== 1 ? "s" : ""}
+                                </span>
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="p-2 bg-slate-50 rounded-lg">
+                              <p className="text-xs text-slate-500 text-center">
+                                No reviews yet
+                              </p>
+                            </div>
+                          )}
+                          <div className="flex items-center gap-2 text-xs text-slate-500">
+                            <Calendar className="h-3 w-3" />
+                            <span>Added {formatDate(toilet.createdAt)}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Actions */}
+                      <div className="flex flex-col sm:flex-row gap-3">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleViewDetails(toilet)}
+                          className="flex-1 h-10 bg-gray-200 hover:bg-blue-50 hover:border-blue-300"
+                        >
+                          <Eye className="h-4 w-4 mr-2" />
+                          View Details
+                        </Button>
+
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() =>
+                            openGoogleMaps(
+                              toilet.location.latitude,
+                              toilet.location.longitude
+                            )
+                          }
+                          className="flex-1 h-10 bg-blue-500 text-white border-0 hover:bg-blue-600 shadow-md hover:shadow-lg transition-all hover:text-white"
+                        >
+                          <Navigation className="h-4 w-4 mr-2" />
+                          Open in Google Maps
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
+
+        {/* Enhanced Details Dialog with Map */}
+        <Dialog open={showDetailsDialog} onOpenChange={setShowDetailsDialog}>
+          <DialogContent className="!max-w-6xl max-h-[90vh] overflow-y-auto bg-white/95 backdrop-blur-sm border-0 shadow-2xl">
+            <DialogHeader>
+              <DialogTitle className="text-2xl font-bold text-slate-700 flex items-center gap-2">
+                <div className="p-2 bg-blue-100 rounded-lg">
+                  <MapPin className="h-5 w-5 text-blue-600" />
+                </div>
+                {selectedToilet?.name}
+              </DialogTitle>
+              <DialogDescription className="text-slate-600 flex items-center gap-2">
+                <Navigation className="h-4 w-4" />
+                {selectedToilet?.highway}
+              </DialogDescription>
+            </DialogHeader>
+
+            {selectedToilet && (
+              <div className="space-y-6">
+                {/* Status and Type */}
+                <div className="flex flex-wrap gap-3">
+                  <Badge
+                    variant={getStatusBadgeVariant(selectedToilet.status)}
+                    className="flex items-center gap-2 px-3 py-1 text-sm font-medium bg-blue-500"
+                  >
+                    {getStatusIcon(selectedToilet.status)}
+                    {selectedToilet.status}
+                  </Badge>
+                  {/* Render multiple types in dialog */}
+                  {renderToiletTypes(selectedToilet.type)}
+                  {selectedToilet.accessible && (
+                    <Badge
+                      variant="outline"
+                      className="px-3 py-1 text-sm bg-green-50 text-green-700 border-green-200"
+                    >
+                      Wheelchair Accessible
+                    </Badge>
+                  )}
+                </div>
+
+                {/* Map and Location Side by Side */}
+                <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+                  {/* Map Section */}
+                  <Card className="bg-slate-50 border-slate-200">
+                    <CardHeader className="pb-3">
+                      <CardTitle className="text-lg flex items-center gap-2">
+                        <MapPin className="h-5 w-5 text-blue-600" />
+                        Location Map
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="h-80 rounded-xl overflow-hidden border-2 border-slate-200 shadow-md">
+                        <MapContainer
+                          center={[
+                            selectedToilet.location.latitude,
+                            selectedToilet.location.longitude,
+                          ]}
+                          zoom={15}
+                          scrollWheelZoom={true}
+                          className="h-full w-full"
+                        >
+                          <TileLayer
+                            attribution="&copy; OpenStreetMap contributors"
+                            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                          />
+                          <Marker
+                            position={[
+                              selectedToilet.location.latitude,
+                              selectedToilet.location.longitude,
+                            ]}
+                          >
+                            <Popup>
+                              <div className="p-2">
+                                <h3 className="font-semibold">
+                                  {selectedToilet.name}
+                                </h3>
+                                <p className="text-sm text-gray-600">
+                                  {selectedToilet.highway}
+                                </p>
+                                <div className="text-xs text-gray-500 mt-1 space-y-1">
+                                  <p>
+                                    {selectedToilet.location.latitude.toFixed(
+                                      6
+                                    )}
+                                    ,{" "}
+                                    {selectedToilet.location.longitude.toFixed(
+                                      6
+                                    )}
+                                  </p>
+                                  <p>
+                                    Types:{" "}
+                                    {getTypesAsString(selectedToilet.type)}
+                                  </p>
+                                </div>
+                              </div>
+                            </Popup>
+                          </Marker>
+                        </MapContainer>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  {/* Location Info */}
+                  <Card className="bg-slate-50 border-slate-200">
+                    <CardHeader className="pb-3">
+                      <CardTitle className="text-lg flex items-center gap-2">
+                        <Navigation className="h-5 w-5 text-green-600" />
+                        Location Details
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <div className="grid grid-cols-1 gap-4">
+                        <div className="p-3 bg-white rounded-lg">
+                          <span className="text-sm text-slate-500">
+                            Latitude
+                          </span>
+                          <p className="font-mono text-lg font-medium text-slate-700">
+                            {selectedToilet.location.latitude}
+                          </p>
+                        </div>
+                        <div className="p-3 bg-white rounded-lg">
+                          <span className="text-sm text-slate-500">
+                            Longitude
+                          </span>
+                          <p className="font-mono text-lg font-medium text-slate-700">
+                            {selectedToilet.location.longitude}
+                          </p>
+                        </div>
+                      </div>
+                      {selectedToilet.location.address && (
+                        <div className="p-3 bg-white rounded-lg">
+                          <span className="text-sm text-slate-500">
+                            Address
+                          </span>
+                          <p className="mt-1 text-slate-700">
+                            {selectedToilet.location.address}
+                          </p>
+                        </div>
+                      )}
+                      <Button
+                        variant="outline"
+                        onClick={() =>
+                          openGoogleMaps(
+                            selectedToilet.location.latitude,
+                            selectedToilet.location.longitude
+                          )
+                        }
+                        className="w-full bg-green-50 hover:bg-green-100 border-green-200 text-green-700"
+                      >
+                        <Navigation className="h-4 w-4 mr-2" />
+                        Open in Google Maps
+                      </Button>
+                    </CardContent>
+                  </Card>
+                </div>
+
+                {/* Reviews Section */}
+                {selectedToilet.reviews &&
+                  selectedToilet.reviews.length > 0 && (
+                    <Card className="bg-yellow-50 border-yellow-200">
+                      <CardHeader className="pb-3">
+                        <CardTitle className="text-lg flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <Star className="h-5 w-5 text-yellow-600" />
+                            Reviews ({selectedToilet.reviews.length})
+                          </div>
+                          <div className="flex items-center gap-2 bg-yellow-100 px-3 py-1 rounded-full">
+                            <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                            <span className="font-semibold text-yellow-700">
+                              {calculateAverageRating(selectedToilet.reviews)}{" "}
+                              average
+                            </span>
+                          </div>
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-4 max-h-60 overflow-y-auto">
+                          {selectedToilet.reviews.map((review) => (
+                            <div
+                              key={review._id}
+                              className="bg-white border border-yellow-200 rounded-lg p-4"
+                            >
+                              <div className="flex justify-between items-start mb-3">
+                                <div>
+                                  <p className="font-semibold text-slate-700">
+                                    {review.username}
+                                  </p>
+                                  <div className="flex items-center gap-1">
+                                    {[...Array(5)].map((_, i) => (
+                                      <Star
+                                        key={i}
+                                        className={`h-4 w-4 ${
+                                          i < review.rating
+                                            ? "fill-yellow-400 text-yellow-400"
+                                            : "text-slate-300"
+                                        }`}
+                                      />
+                                    ))}
+                                  </div>
+                                </div>
+                                <span className="text-sm text-slate-500">
+                                  {formatDate(review.createdAt)}
+                                </span>
+                              </div>
+                              <p className="text-slate-700 mb-3">
+                                {review.comment}
+                              </p>
+                              {review.photos && review.photos.length > 0 && (
+                                <div className="flex gap-2 overflow-x-auto">
+                                  {review.photos.map((photo, index) => (
+                                    <img
+                                      key={index}
+                                      src={`data:image/jpeg;base64,${photo.data}`}
+                                      alt={`Review photo ${index + 1}`}
+                                      className="w-20 h-20 object-cover rounded-lg border border-slate-200 flex-shrink-0"
+                                    />
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  )}
+
+                {/* Images */}
+                {selectedToilet.images && selectedToilet.images.length > 0 && (
+                  <Card className="bg-purple-50 border-purple-200">
+                    <CardHeader className="pb-3">
+                      <CardTitle className="text-lg flex items-center gap-2">
+                        <ImageIcon className="h-5 w-5 text-purple-600" />
+                        Images ({selectedToilet.images.length})
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                        {selectedToilet.images.map((image, index) => (
+                          <div
+                            key={index}
+                            className="aspect-square rounded-xl overflow-hidden bg-white border-2 border-purple-200 hover:border-purple-400 transition-colors group"
+                          >
+                            <img
+                              src={`data:image/jpeg;base64,${image.data}`}
+                              alt={`${selectedToilet.name} - Image ${
+                                index + 1
+                              }`}
+                              className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+
+                {/* Metadata */}
+                <Card className="bg-slate-50 border-slate-200">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-lg flex items-center gap-2">
+                      <Clock className="h-5 w-5 text-slate-600" />
+                      Information
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                      <div className="p-3 bg-white rounded-lg">
+                        <span className="text-slate-500">Created</span>
+                        <p className="font-medium text-slate-700">
+                          {formatDate(selectedToilet.createdAt)}
+                        </p>
+                      </div>
+                      <div className="p-3 bg-white rounded-lg">
+                        <span className="text-slate-500">Last Updated</span>
+                        <p className="font-medium text-slate-700">
+                          {formatDate(selectedToilet.updatedAt)}
+                        </p>
+                      </div>
+                      <div className="p-3 bg-white rounded-lg md:col-span-2">
+                        <span className="text-slate-500">Toilet ID</span>
+                        <p className="font-mono text-xs text-slate-600 break-all mt-1">
+                          {selectedToilet._id}
+                        </p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            )}
+          </DialogContent>
+        </Dialog>
+      </div>
+    </div>
+  );
+};
+
+export default MyToilets;
