@@ -15,6 +15,7 @@ import {
   BarChart3,
   CheckCircle,
   Globe,
+  Github,
 } from "lucide-react";
 
 export default function LandingPage() {
@@ -205,18 +206,34 @@ export default function LandingPage() {
 
               {/* Action Buttons */}
               <div className="flex flex-col gap-3">
-                <a
-                  href="https://drive.google.com/file/d/1gwN6LDuOGszCzBJ49tpcCIHqDoa_PC9O/view?usp=sharing"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-2 px-6 py-5 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl hover:from-green-700 hover:to-emerald-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
-                >
-                  <Download className="h-5 w-5" />
-                  <span className="font-semibold text-lg">
-                    Download Android APK for Users
-                  </span>
-                </a>
+                {/* Row: APK + GitHub */}
+                <div className="flex flex-row gap-2">
+                  {/* APK Button - full width */}
+                  <a
+                    href="https://drive.google.com/file/d/1gwN6LDuOGszCzBJ49tpcCIHqDoa_PC9O/view?usp=sharing"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 flex items-center justify-center gap-2 px-6 py-5 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl hover:from-green-700 hover:to-emerald-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
+                  >
+                    <Download className="h-5 w-5" />
+                    <span className="font-semibold text-lg">
+                      Download Android APK for Users
+                    </span>
+                  </a>
 
+                  {/* GitHub Button - auto width */}
+                  <a
+                    href="https://github.com/anurag03-tech/NHAI-2025"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center gap-2 px-5 py-5 bg-black text-white rounded-xl hover:bg-gray-900 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 w-auto"
+                  >
+                    <Github className="h-5 w-5" />
+                    <span className="font-semibold text-lg">GitHub</span>
+                  </a>
+                </div>
+
+                {/* Row: Admin Portal */}
                 <button
                   onClick={() => navigate("/login")}
                   className="flex items-center justify-center gap-2 px-6 py-5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
