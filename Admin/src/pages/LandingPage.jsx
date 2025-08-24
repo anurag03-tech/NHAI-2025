@@ -37,7 +37,7 @@ export default function LandingPage() {
     {
       id: 1,
       image: "/mobile-user.png",
-      title: "NHAI Mobile App",
+      title: "NHAI Toilets Mobile App",
       subtitle: "Find & Rate Toilet Facilities",
       tag: "For Users ",
       type: "mobile",
@@ -47,7 +47,7 @@ export default function LandingPage() {
     {
       id: 2,
       image: "/admin-dash.png",
-      title: "NHAI Admin Dashboard",
+      title: "NHAI Toilets Admin Dashboard",
       subtitle: "Comprehensive System Management",
       tag: "For NHAI Admin",
       type: "web",
@@ -57,7 +57,7 @@ export default function LandingPage() {
     {
       id: 3,
       image: "/mode-dash.png",
-      title: "Moderator Portal",
+      title: "NHAI Toilets Moderator Dashboard",
       subtitle: "Facility Management & Updates",
       tag: "For Moderators",
       type: "web",
