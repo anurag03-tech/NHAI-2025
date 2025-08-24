@@ -24,7 +24,7 @@ exports.login = async (req, res) => {
 
     const token = generateToken(user._id);
 
-    // ✅ Universal cookie settings - works for both cross-origin and same-origin
+    //  Universal cookie settings - works for both cross-origin and same-origin
     res.cookie("token", token, {
       httpOnly: true,
       secure: true, // Always true for HTTPS (required for sameSite: "none")
@@ -45,7 +45,7 @@ exports.login = async (req, res) => {
 };
 
 exports.logout = (req, res) => {
-  // ✅ Clear cookie with same settings
+  //  Clear cookie with same settings
   res.clearCookie("token", {
     httpOnly: true,
     secure: true,
