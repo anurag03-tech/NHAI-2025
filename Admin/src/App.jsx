@@ -14,7 +14,6 @@ import Reviews from "./pages/Moderator/Reviews";
 import Penalties from "./pages/Moderator/Penalties";
 
 // Admin Components
-import NhaiAdminHome from "./pages/NhaiAdmin/Home";
 import AllToilets from "./pages/NhaiAdmin/AllToilets.jsx";
 import AllComplaints from "./pages/NhaiAdmin/AllComplaints";
 import Moderators from "./pages/NhaiAdmin/Moderators";
