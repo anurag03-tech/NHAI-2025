@@ -15,7 +15,7 @@ export default function MyComplaints() {
   const [username, setUsername] = useState('');
 
   useEffect(() => {
-    loadUsername();
+    initializeUsername();
   }, []);
 
   useEffect(() => {
@@ -24,18 +24,33 @@ export default function MyComplaints() {
     }
   }, [username]);
 
-  const loadUsername = async () => {
+  // Generate random username in format "user + 9-digit number"
+  const generateRandomUsername = () => {
+    const randomNumber = Math.floor(100000000 + Math.random() * 900000000); // 9-digit number
+    return `user${randomNumber}`;
+  };
+
+  // Initialize username - generate if doesn't exist, load if exists
+  const initializeUsername = async () => {
     try {
-      const storedUsername = await AsyncStorage.getItem('username');
-      if (storedUsername) {
-        setUsername(storedUsername);
+      let storedUsername = await AsyncStorage.getItem('username');
+
+      if (!storedUsername) {
+        // Generate new random username
+        storedUsername = generateRandomUsername();
+        await AsyncStorage.setItem('username', storedUsername);
+        console.log('Generated new username:', storedUsername);
       } else {
-        Alert.alert('Error', 'No username found. Please set your username first.');
-        router.back();
+        console.log('Loaded existing username:', storedUsername);
       }
+
+      setUsername(storedUsername);
     } catch (error) {
-      console.error('Error loading username:', error);
-      Alert.alert('Error', 'Failed to load user data');
+      console.error('Error initializing username:', error);
+      // Fallback: generate username without saving
+      const fallbackUsername = generateRandomUsername();
+      setUsername(fallbackUsername);
+      Alert.alert('Info', 'Using temporary username for this session');
     }
   };
 
@@ -88,6 +103,21 @@ export default function MyComplaints() {
     }
   };
 
+  // Loading screen with username initialization
+  if (loading && !refreshing && !username) {
+    return (
+      <View className="flex-1 items-center justify-center bg-gray-50">
+        <View className="items-center rounded-2xl bg-white p-8 shadow-sm">
+          <View className="mb-4 rounded-full bg-blue-50 p-4">
+            <Ionicons name="person-add-outline" size={32} color="#3b82f6" />
+          </View>
+          <Text className="text-lg font-medium text-gray-700">Setting up your profile...</Text>
+          <Text className="mt-1 text-sm text-gray-500">Initializing username</Text>
+        </View>
+      </View>
+    );
+  }
+
   if (loading && !refreshing) {
     return (
       <View className="flex-1 items-center justify-center bg-gray-50">
@@ -126,7 +156,7 @@ export default function MyComplaints() {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#3b82f6" />
         }>
         {/* Stats Card */}
-        <View className="mx-4 my-2 rounded-2xl bg-blue-100  px-4 py-3 shadow-sm">
+        <View className="mx-4 my-2 rounded-2xl bg-blue-100 px-4 py-3 shadow-sm">
           <View className="flex-row items-center justify-between">
             <View>
               <Text className="text-2xl font-bold text-gray-800">{complaints.length}</Text>

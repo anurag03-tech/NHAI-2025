@@ -196,12 +196,17 @@ export default function LandingPage() {
 
               {/* Action Buttons */}
               <div className="flex flex-col gap-3">
-                <button className="flex items-center justify-center gap-2 px-6 py-5 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl hover:from-green-700 hover:to-emerald-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
+                <a
+                  href="https://drive.google.com/file/d/1gwN6LDuOGszCzBJ49tpcCIHqDoa_PC9O/view?usp=sharing"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-2 px-6 py-5 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl hover:from-green-700 hover:to-emerald-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
+                >
                   <Download className="h-5 w-5" />
                   <span className="font-semibold text-lg">
                     Download Android APK for Users
                   </span>
-                </button>
+                </a>
 
                 <button
                   onClick={() => navigate("/login")}

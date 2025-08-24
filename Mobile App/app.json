@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "my-expo-app",
-    "slug": "my-expo-app",
+    "name": "NHAI Toilets",
+    "slug": "nhai-toilets",
     "version": "1.0.0",
     "web": {
       "favicon": "./assets/favicon.png"
@@ -33,28 +33,29 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true
     },
     "android": {
       "newArchEnabled": false,
-      "config": {
-        "googleMaps": {
-          "apiKey": "AIzaSyCswEbP3xjZCbLkdY4NuO1zpbxnuzQwGvY"
-        }
-      },
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
       "permissions": [
         "android.permission.ACCESS_COARSE_LOCATION",
-        "android.permission.ACCESS_FINE_LOCATION",
-        "android.permission.ACCESS_COARSE_LOCATION",
         "android.permission.ACCESS_FINE_LOCATION"
       ],
       "package": "com.anurag2003.myexpoapp"
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "b3079edf-369b-4440-b586-4a80dc71bc93"
+      }
     }
   }
 }

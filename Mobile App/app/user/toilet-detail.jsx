@@ -11,6 +11,8 @@ import {
   Linking,
   TextInput,
   Modal,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -463,306 +465,341 @@ export default function ToiletDetail() {
   const mainImage = toiletData.images?.[0];
 
   return (
-    <ScrollView className="flex-1 bg-gray-50">
-      {/* Header */}
-      <View className="border-b border-gray-200 bg-white px-4 py-3">
-        <View className="flex-row items-center">
-          <Pressable onPress={() => router.back()}>
-            <Ionicons name="arrow-back" size={24} color="#374151" />
-          </Pressable>
-          <Text className="ml-4 text-lg font-semibold text-gray-800">{toiletData.name}</Text>
-        </View>
-      </View>
-
-      {/* Official Photo */}
-      {mainImage && (
-        <View className=" bg-white">
-          <Image
-            source={{ uri: `data:image/jpeg;base64,${mainImage.data}` }}
-            style={{ width: '100%', height: 240 }}
-            resizeMode="cover"
-          />
-        </View>
-      )}
-
-      {/* Basic Info */}
-      <View className="mb-2 bg-white p-4">
-        <View className="mb-2 flex-row items-center justify-between">
-          <View className="flex-1">
-            <View className="mb-2 flex-row items-center">
-              {renderStars(averageRating)}
-              <Text className="ml-2 text-gray-600">{averageRating || 'No rating'}</Text>
-            </View>
-            {toiletData.location?.address && (
-              <View className="flex-row items-center">
-                <Ionicons name="location-outline" size={16} color="#6b7280" />
-                <Text className="ml-1 text-gray-600">{toiletData.location.address}</Text>
-              </View>
-            )}
-            {toiletData.highway && (
-              <View className="mt-1 flex-row items-center">
-                <Ionicons name="car-outline" size={16} color="#6b7280" />
-                <Text className="ml-1 text-gray-600">Highway: {toiletData.highway}</Text>
-              </View>
-            )}
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={{ flex: 1 }}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}>
+      <ScrollView
+        className="flex-1 bg-gray-50"
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled">
+        {/* Header */}
+        <View className="border-b border-gray-200 bg-white px-4 py-3">
+          <View className="flex-row items-center">
+            <Pressable onPress={() => router.back()}>
+              <Ionicons name="arrow-back" size={24} color="#374151" />
+            </Pressable>
+            <Text className="ml-4 text-lg font-semibold text-gray-800">{toiletData.name}</Text>
           </View>
-          <View
-            className={`rounded-full px-3 py-1 ${
-              toiletData.status === 'Open' ? 'bg-green-100' : 'bg-red-100'
-            }`}>
-            <Text
-              className={`text-sm font-medium ${
-                toiletData.status === 'Open' ? 'text-green-600' : 'text-red-600'
+        </View>
+
+        {/* Official Photo */}
+        {mainImage && (
+          <View className=" bg-white">
+            <Image
+              source={{ uri: `data:image/jpeg;base64,${mainImage.data}` }}
+              style={{ width: '100%', height: 240 }}
+              resizeMode="cover"
+            />
+          </View>
+        )}
+
+        {/* Basic Info */}
+        <View className="mb-2 bg-white p-4">
+          <View className="mb-2 flex-row items-center justify-between">
+            <View className="flex-1">
+              <View className="mb-2 flex-row items-center">
+                {renderStars(averageRating)}
+                <Text className="ml-2 text-gray-600">{averageRating || 'No rating'}</Text>
+              </View>
+              {toiletData.location?.address && (
+                <View className="flex-row items-center">
+                  <Ionicons name="location-outline" size={16} color="#6b7280" />
+                  <Text className="ml-1 text-gray-600">{toiletData.location.address}</Text>
+                </View>
+              )}
+              {toiletData.highway && (
+                <View className="mt-1 flex-row items-center">
+                  <Ionicons name="car-outline" size={16} color="#6b7280" />
+                  <Text className="ml-1 text-gray-600">Highway: {toiletData.highway}</Text>
+                </View>
+              )}
+            </View>
+            <View
+              className={`rounded-full px-3 py-1 ${
+                toiletData.status === 'Open' ? 'bg-green-100' : 'bg-red-100'
               }`}>
-              {toiletData.status}
-            </Text>
-          </View>
-        </View>
-
-        {/* Amenities */}
-        {toiletData.type && toiletData.type.length > 0 && (
-          <View className="mt-3">
-            <Text className="mb-2 text-sm font-medium text-gray-800">Available:</Text>
-            <View className="flex-row flex-wrap">
-              {toiletData.type.map((type, index) => (
-                <View
-                  key={index}
-                  className="mb-1 mr-2 flex-row items-center rounded bg-gray-100 px-2 py-1">
-                  <Ionicons name="checkmark-circle" size={12} color="#059669" />
-                  <Text className="text ml-1 text-gray-700">{type}</Text>
-                </View>
-              ))}
-              {toiletData.accessible && (
-                <View className="mb-1 mr-2 flex-row items-center rounded bg-green-100 px-2 py-1">
-                  <Ionicons name="accessibility" size={12} color="#059669" />
-                  <Text className="ml-1 text-xs text-green-700">Accessible</Text>
-                </View>
-              )}
+              <Text
+                className={`text-sm font-medium ${
+                  toiletData.status === 'Open' ? 'text-green-600' : 'text-red-600'
+                }`}>
+                {toiletData.status}
+              </Text>
             </View>
           </View>
-        )}
 
-        {/* Action Buttons */}
-        <View className="mt-4 flex-row gap-1 space-x-2">
-          <Pressable className="flex-1  rounded-lg bg-blue-600 py-3" onPress={openDirections}>
-            <View className="flex-row items-center justify-center">
-              <Ionicons name="navigate" size={20} color="white" />
-              <Text className="ml-2 font-semibold text-white">Directions</Text>
-            </View>
-          </Pressable>
-          <Pressable className="flex-1 rounded-lg bg-red-600 py-3" onPress={openComplaintModal}>
-            <View className="flex-row items-center justify-center">
-              <Ionicons name="warning" size={20} color="white" />
-              <Text className="ml-2 font-semibold text-white">Complaint</Text>
-            </View>
-          </Pressable>
-        </View>
-      </View>
-
-      {/* Reviews Section */}
-      <View className=" bg-white px-4">
-        <View className="mb-4 flex-row items-center">
-          <Ionicons name="star" size={20} color="#fbbf24" />
-          <Text className="ml-2 text-lg font-semibold text-gray-800">
-            Reviews ({allReviews.length})
-          </Text>
-        </View>
-        {allReviews.length === 0 ? (
-          <View className="items-center py-8">
-            <Ionicons name="chatbubble-outline" size={48} color="#9ca3af" />
-            <Text className="mt-2 text-center text-gray-500">
-              No reviews yet. Be the first to review!
-            </Text>
-          </View>
-        ) : (
-          allReviews.map((review, index) => (
-            <View key={review._id || index} className="mb-2 border-b border-gray-100 pb-4">
-              <View className="mb-2 flex-row items-center justify-between">
-                <View className="flex-row items-center">
-                  <Ionicons name="person-circle" size={20} color="#6b7280" />
-                  <Text className="ml-1 font-semibold text-gray-800">@{review.username}</Text>
-                </View>
-                <View className="flex-row items-center">
-                  {renderStars(review.rating)}
-                  <Text className="ml-1 text-sm text-gray-600">{review.rating}</Text>
-                </View>
-              </View>
-              <Text className="mb-2 text-gray-700">{review.comment}</Text>
-              {review.photos && review.photos.length > 0 && (
-                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                  {review.photos.map((photo, photoIndex) => (
-                    <Image
-                      key={photoIndex}
-                      source={{ uri: `data:image/jpeg;base64,${photo}` }}
-                      style={{ width: 150, height: 100, marginRight: 8 }}
-                      className="rounded-lg"
-                      resizeMode="cover"
-                    />
-                  ))}
-                </ScrollView>
-              )}
-              <View className="mt-2 flex-row items-center">
-                <Ionicons name="calendar-outline" size={12} color="#9ca3af" />
-                <Text className="ml-1 text-xs text-gray-500">
-                  {new Date(review.createdAt).toLocaleDateString()}
-                </Text>
+          {/* Amenities */}
+          {toiletData.type && toiletData.type.length > 0 && (
+            <View className="mt-3">
+              <Text className="mb-2 text-sm font-medium text-gray-800">Available:</Text>
+              <View className="flex-row flex-wrap">
+                {toiletData.type.map((type, index) => (
+                  <View
+                    key={index}
+                    className="mb-1 mr-2 flex-row items-center rounded bg-gray-100 px-2 py-1">
+                    <Ionicons name="checkmark-circle" size={12} color="#059669" />
+                    <Text className="text ml-1 text-gray-700">{type}</Text>
+                  </View>
+                ))}
+                {toiletData.accessible && (
+                  <View className="mb-1 mr-2 flex-row items-center rounded bg-green-100 px-2 py-1">
+                    <Ionicons name="accessibility" size={12} color="#059669" />
+                    <Text className="ml-1 text-xs text-green-700">Accessible</Text>
+                  </View>
+                )}
               </View>
             </View>
-          ))
-        )}
-      </View>
+          )}
 
-      {/* Write Review Section */}
-      <View className="mb-4 bg-white p-4">
-        <View className="mb-4 flex-row items-center">
-          <Ionicons name="create" size={20} color="#3b82f6" />
-          <Text className="ml-2 text-lg font-semibold text-gray-800">Write a Review</Text>
-        </View>
-
-        {/* Show current username */}
-        <View className="mb-3 flex-row items-center rounded-lg bg-blue-50 p-3">
-          <Ionicons name="person" size={16} color="#3b82f6" />
-          <Text className="ml-2 text-sm text-blue-800">
-            Reviewing as: <Text className="font-semibold">@{storedUsername}</Text>
-          </Text>
-        </View>
-
-        {/* Rating */}
-        <View className="mb-3">
-          <Text className="mb-2 text-sm font-medium text-gray-800">Your Rating:</Text>
-          <View className="flex-row">
-            {[1, 2, 3, 4, 5].map((star) => (
-              <Pressable key={star} onPress={() => setNewRating(star)}>
-                <Ionicons
-                  name={star <= newRating ? 'star' : 'star-outline'}
-                  size={28}
-                  color="#fbbf24"
-                  style={{ marginRight: 8 }}
-                />
-              </Pressable>
-            ))}
+          {/* Action Buttons */}
+          <View className="mt-4 flex-row gap-1 space-x-2">
+            <Pressable className="flex-1  rounded-lg bg-blue-600 py-3" onPress={openDirections}>
+              <View className="flex-row items-center justify-center">
+                <Ionicons name="navigate" size={20} color="white" />
+                <Text className="ml-2 font-semibold text-white">Directions</Text>
+              </View>
+            </Pressable>
+            <Pressable className="flex-1 rounded-lg bg-red-600 py-3" onPress={openComplaintModal}>
+              <View className="flex-row items-center justify-center">
+                <Ionicons name="warning" size={20} color="white" />
+                <Text className="ml-2 font-semibold text-white">Complaint</Text>
+              </View>
+            </Pressable>
           </View>
         </View>
 
-        {/* Review Text */}
-        <View className="mb-3">
-          <Text className="mb-2 text-sm font-medium text-gray-800">Your Review:</Text>
-          <TextInput
-            className="rounded-lg border border-gray-300 p-3"
-            placeholder="Share your experience..."
-            value={newReview}
-            onChangeText={setNewReview}
-            multiline
-            numberOfLines={4}
-            textAlignVertical="top"
-          />
-        </View>
-
-        {/* Photo Section */}
-        <View className="mb-4">
-          <Text className="mb-2 text-sm font-medium text-gray-800">Add Photo (Optional):</Text>
-          {reviewPhoto ? (
-            <View className="relative">
-              <Image
-                source={{ uri: reviewPhoto.uri }}
-                style={{ width: '100%', height: 150 }}
-                className="rounded-lg"
-                resizeMode="cover"
-              />
-              <Pressable
-                className="absolute right-2 top-2 rounded-full bg-red-500 p-2"
-                onPress={removePhoto}>
-                <Ionicons name="close" size={16} color="white" />
-              </Pressable>
+        {/* Reviews Section */}
+        <View className=" bg-white px-4">
+          <View className="mb-4 flex-row items-center">
+            <Ionicons name="star" size={20} color="#fbbf24" />
+            <Text className="ml-2 text-lg font-semibold text-gray-800">
+              Reviews ({allReviews.length})
+            </Text>
+          </View>
+          {allReviews.length === 0 ? (
+            <View className="items-center py-8">
+              <Ionicons name="chatbubble-outline" size={48} color="#9ca3af" />
+              <Text className="mt-2 text-center text-gray-500">
+                No reviews yet. Be the first to review!
+              </Text>
             </View>
           ) : (
-            <Pressable
-              className="flex-row items-center justify-center rounded-lg border-2 border-dashed border-gray-300 py-4"
-              onPress={takePhoto}>
-              <Ionicons name="camera-outline" size={24} color="#6b7280" />
-              <Text className="ml-2 text-gray-600">Take Photo</Text>
-            </Pressable>
+            allReviews.map((review, index) => (
+              <View key={review._id || index} className="mb-2 border-b border-gray-100 pb-4">
+                <View className="mb-2 flex-row items-center justify-between">
+                  <View className="flex-row items-center">
+                    <Ionicons name="person-circle" size={20} color="#6b7280" />
+                    <Text className="ml-1 font-semibold text-gray-800">@{review.username}</Text>
+                  </View>
+                  <View className="flex-row items-center">
+                    {renderStars(review.rating)}
+                    <Text className="ml-1 text-sm text-gray-600">{review.rating}</Text>
+                  </View>
+                </View>
+                <Text className="mb-2 text-gray-700">{review.comment}</Text>
+                {review.photos && review.photos.length > 0 && (
+                  <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                    {review.photos.map((photo, photoIndex) => (
+                      <Image
+                        key={photoIndex}
+                        source={{ uri: `data:image/jpeg;base64,${photo}` }}
+                        style={{ width: 150, height: 100, marginRight: 8 }}
+                        className="rounded-lg"
+                        resizeMode="cover"
+                      />
+                    ))}
+                  </ScrollView>
+                )}
+                <View className="mt-2 flex-row items-center">
+                  <Ionicons name="calendar-outline" size={12} color="#9ca3af" />
+                  <Text className="ml-1 text-xs text-gray-500">
+                    {new Date(review.createdAt).toLocaleDateString()}
+                  </Text>
+                </View>
+              </View>
+            ))
           )}
         </View>
 
-        {/* Submit Button */}
-        <Pressable className="rounded-lg bg-blue-600 py-3" onPress={submitReview}>
-          <View className="flex-row items-center justify-center">
-            <Ionicons name="send" size={16} color="white" />
-            <Text className="ml-2 text-center font-semibold text-white">Submit Review</Text>
+        {/* Enhanced Write Review Section */}
+        <View className="mb-6 bg-white p-4">
+          <View className="mb-4 flex-row items-center">
+            <Ionicons name="create" size={20} color="#3b82f6" />
+            <Text className="ml-2 text-lg font-semibold text-gray-800">Write a Review</Text>
           </View>
-        </Pressable>
-      </View>
 
-      {/* Complaint Modal */}
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={complaintModalVisible}
-        onRequestClose={() => setComplaintModalVisible(false)}>
-        <View className="flex-1 items-center justify-center bg-black/50">
-          <View className="mx-4 w-80 rounded-lg bg-white p-6">
-            <View className="mb-4 flex-row items-center justify-center">
-              <Ionicons name="warning" size={24} color="#ef4444" />
-              <Text className="ml-2 text-center text-lg font-semibold text-gray-800">
-                Submit Complaint
-              </Text>
+          {/* Show current username */}
+          <View className="mb-3 flex-row items-center rounded-lg bg-blue-50 p-3">
+            <Ionicons name="person" size={16} color="#3b82f6" />
+            <Text className="ml-2 text-sm text-blue-800">
+              Reviewing as: <Text className="font-semibold">@{storedUsername}</Text>
+            </Text>
+          </View>
+
+          {/* Rating */}
+          <View className="mb-3">
+            <Text className="mb-2 text-sm font-medium text-gray-800">Your Rating:</Text>
+            <View className="flex-row">
+              {[1, 2, 3, 4, 5].map((star) => (
+                <Pressable key={star} onPress={() => setNewRating(star)}>
+                  <Ionicons
+                    name={star <= newRating ? 'star' : 'star-outline'}
+                    size={28}
+                    color="#fbbf24"
+                    style={{ marginRight: 8 }}
+                  />
+                </Pressable>
+              ))}
             </View>
+          </View>
 
-            {/* Show username */}
-            <View className="mb-4 flex-row items-center">
-              <Ionicons name="person" size={16} color="#6b7280" />
-              <Text className="ml-2 text-sm text-gray-600">
-                Reporting as: <Text className="font-semibold">@{storedUsername}</Text>
-              </Text>
-            </View>
+          {/* Enhanced Review Text Input */}
+          <View className="mb-3">
+            <Text className="mb-2 text-sm font-medium text-gray-800">Your Review:</Text>
+            <TextInput
+              className="rounded-lg border border-gray-300 p-3"
+              placeholder="Share your experience..."
+              placeholderTextColor="#9CA3AF"
+              value={newReview}
+              onChangeText={setNewReview}
+              multiline
+              numberOfLines={4}
+              textAlignVertical="top"
+              style={{
+                color: '#1F2937',
+                fontSize: 16,
+                lineHeight: 20,
+                minHeight: 100,
+              }}
+              autoCorrect={true}
+              autoCapitalize="sentences"
+            />
+          </View>
 
-            <View className="mb-4">
-              <Text className="mb-2 text-sm font-medium text-gray-800">Phone Number:</Text>
-              <View className="flex-row items-center rounded-lg border border-gray-300 px-3">
-                <Ionicons name="call-outline" size={16} color="#6b7280" />
-                <TextInput
-                  className="ml-2 flex-1 py-3"
-                  placeholder="Enter your phone number"
-                  value={complaintPhone}
-                  onChangeText={setComplaintPhone}
-                  keyboardType="phone-pad"
-                  maxLength={10}
+          {/* Photo Section */}
+          <View className="mb-4">
+            <Text className="mb-2 text-sm font-medium text-gray-800">Add Photo (Optional):</Text>
+            {reviewPhoto ? (
+              <View className="relative">
+                <Image
+                  source={{ uri: reviewPhoto.uri }}
+                  style={{ width: '100%', height: 150 }}
+                  className="rounded-lg"
+                  resizeMode="cover"
                 />
+                <Pressable
+                  className="absolute right-2 top-2 rounded-full bg-red-500 p-2"
+                  onPress={removePhoto}>
+                  <Ionicons name="close" size={16} color="white" />
+                </Pressable>
               </View>
-            </View>
-            <View className="mb-4">
-              <Text className="mb-2 text-sm font-medium text-gray-800">Describe the Issue:</Text>
-              <View className="rounded-lg border border-gray-300 px-3 pt-2">
-                <TextInput
-                  className="text-top h-20"
-                  placeholder="Please provide details about the issue..."
-                  value={complaintText}
-                  onChangeText={setComplaintText}
-                  multiline
-                  textAlignVertical="top"
-                />
-              </View>
-            </View>
-            <View className="flex-row space-x-2">
-              <Pressable className="flex-1 rounded-lg bg-red-600 py-3" onPress={submitComplaint}>
-                <View className="flex-row items-center justify-center">
-                  <Ionicons name="send" size={16} color="white" />
-                  <Text className="ml-2 text-center font-semibold text-white">Submit</Text>
-                </View>
-              </Pressable>
+            ) : (
               <Pressable
-                className="flex-1 rounded-lg bg-gray-300 py-3"
-                onPress={() => setComplaintModalVisible(false)}>
-                <View className="flex-row items-center justify-center">
-                  <Ionicons name="close" size={16} color="#374151" />
-                  <Text className="ml-2 text-center font-semibold text-gray-700">Cancel</Text>
-                </View>
+                className="flex-row items-center justify-center rounded-lg border-2 border-dashed border-gray-300 py-4"
+                onPress={takePhoto}>
+                <Ionicons name="camera-outline" size={24} color="#6b7280" />
+                <Text className="ml-2 text-gray-600">Take Photo</Text>
               </Pressable>
-            </View>
+            )}
           </View>
+
+          {/* Submit Button */}
+          <Pressable className="rounded-lg bg-blue-600 py-3" onPress={submitReview}>
+            <View className="flex-row items-center justify-center">
+              <Ionicons name="send" size={16} color="white" />
+              <Text className="ml-2 text-center font-semibold text-white">Submit Review</Text>
+            </View>
+          </Pressable>
         </View>
-      </Modal>
-    </ScrollView>
+
+        {/* Enhanced Complaint Modal */}
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={complaintModalVisible}
+          onRequestClose={() => setComplaintModalVisible(false)}>
+          <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            style={{ flex: 1 }}>
+            <View className="flex-1 items-center justify-center bg-black/50">
+              <View className="mx-4 w-80 rounded-lg bg-white p-6">
+                <View className="mb-4 flex-row items-center justify-center">
+                  <Ionicons name="warning" size={24} color="#ef4444" />
+                  <Text className="ml-2 text-center text-lg font-semibold text-gray-800">
+                    Submit Complaint
+                  </Text>
+                </View>
+
+                {/* Show username */}
+                <View className="mb-4 flex-row items-center">
+                  <Ionicons name="person" size={16} color="#6b7280" />
+                  <Text className="ml-2 text-sm text-gray-600">
+                    Reporting as: <Text className="font-semibold">@{storedUsername}</Text>
+                  </Text>
+                </View>
+
+                <View className="mb-4">
+                  <Text className="mb-2 text-sm font-medium text-gray-800">Phone Number:</Text>
+                  <View className="flex-row items-center rounded-lg border border-gray-300 px-3">
+                    <Ionicons name="call-outline" size={16} color="#6b7280" />
+                    <TextInput
+                      className="ml-2 flex-1 py-3"
+                      placeholder="Enter your phone number"
+                      placeholderTextColor="#9CA3AF"
+                      value={complaintPhone}
+                      onChangeText={setComplaintPhone}
+                      keyboardType="phone-pad"
+                      maxLength={10}
+                      style={{ color: '#1F2937' }}
+                    />
+                  </View>
+                </View>
+
+                <View className="mb-4">
+                  <Text className="mb-2 text-sm font-medium text-gray-800">
+                    Describe the Issue:
+                  </Text>
+                  <View className="rounded-lg border border-gray-300 px-3 pt-2">
+                    <TextInput
+                      className="h-20"
+                      placeholder="Please provide details about the issue..."
+                      placeholderTextColor="#9CA3AF"
+                      value={complaintText}
+                      onChangeText={setComplaintText}
+                      multiline
+                      textAlignVertical="top"
+                      style={{
+                        color: '#1F2937',
+                        fontSize: 16,
+                        lineHeight: 20,
+                      }}
+                    />
+                  </View>
+                </View>
+
+                <View className="flex-row space-x-2">
+                  <Pressable
+                    className="flex-1 rounded-lg bg-red-600 py-3"
+                    onPress={submitComplaint}>
+                    <View className="flex-row items-center justify-center">
+                      <Ionicons name="send" size={16} color="white" />
+                      <Text className="ml-2 text-center font-semibold text-white">Submit</Text>
+                    </View>
+                  </Pressable>
+                  <Pressable
+                    className="flex-1 rounded-lg bg-gray-300 py-3"
+                    onPress={() => setComplaintModalVisible(false)}>
+                    <View className="flex-row items-center justify-center">
+                      <Ionicons name="close" size={16} color="#374151" />
+                      <Text className="ml-2 text-center font-semibold text-gray-700">Cancel</Text>
+                    </View>
+                  </Pressable>
+                </View>
+              </View>
+            </View>
+          </KeyboardAvoidingView>
+        </Modal>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }

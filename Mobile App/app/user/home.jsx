@@ -1,5 +1,5 @@
 // app/user/home.jsx
-import { View, Text, Pressable, ScrollView, StyleSheet, Alert, Linking, Image } from 'react-native';
+import { View, Text, Pressable, ScrollView, Alert, Linking, Image } from 'react-native';
 import { router } from 'expo-router';
 import React, { useState, useEffect, useRef } from 'react';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -9,6 +9,104 @@ import { useFocusEffect } from '@react-navigation/native';
 
 const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URI;
 const GOOGLE_API_KEY = process.env.EXPO_PUBLIC_GOOGLE_API_KEY;
+
+// Skeleton Components
+const SkeletonBox = ({ width = '100%', height = 20, className = '' }) => (
+  <View className={`rounded bg-gray-200 ${className}`} style={{ width, height }} />
+);
+
+const MapSkeleton = () => (
+  <View className="rounded-xl bg-white p-4 shadow-md">
+    <View className="h-80 items-center justify-center rounded-lg bg-gray-200">
+      <Ionicons name="map-outline" size={48} color="#9ca3af" />
+      <Text className="mt-2 text-sm text-gray-500">Loading map...</Text>
+    </View>
+    <View className="mt-2 flex flex-row flex-wrap justify-around rounded-lg bg-gray-100 p-2">
+      {[...Array(4)].map((_, i) => (
+        <View key={i} className="flex-row items-center">
+          <SkeletonBox width={12} height={12} className="mr-1 rounded-full" />
+          <SkeletonBox width={40} height={16} />
+        </View>
+      ))}
+    </View>
+  </View>
+);
+
+const FacilitySkeleton = ({ index }) => (
+  <View className="mb-3 rounded-lg bg-white p-2 shadow-sm">
+    {/* Header with number and name */}
+    <View className="mb-3 flex-row items-center">
+      <View className="mr-2 h-6 w-6 items-center justify-center rounded-full bg-gray-200">
+        <Text className="text-xs font-bold text-gray-400">{index + 1}</Text>
+      </View>
+      <SkeletonBox width="60%" height={20} />
+    </View>
+
+    {/* Image and Action Buttons */}
+    <View className="flex flex-row">
+      {/* Image Placeholder */}
+      <View className="relative w-2/3">
+        <View className="h-[120px] items-center justify-center overflow-hidden rounded-lg bg-gray-200">
+          <Ionicons name="image-outline" size={32} color="#9ca3af" />
+        </View>
+        {/* Status Overlay Skeleton */}
+        <View className="absolute left-2 top-2">
+          <SkeletonBox width={60} height={24} className="rounded-full" />
+        </View>
+      </View>
+
+      {/* Action Buttons Skeleton */}
+      <View className="flex-1 justify-center gap-1 p-2">
+        <SkeletonBox width="100%" height={32} className="rounded-lg" />
+        <SkeletonBox width="100%" height={32} className="rounded-lg" />
+        <SkeletonBox width="100%" height={32} className="rounded-lg" />
+      </View>
+    </View>
+
+    {/* Info Section Skeleton */}
+    <View className="mt-2">
+      {/* Highway info */}
+      <View className="mb-2 flex-row items-center">
+        <SkeletonBox width="70%" height={16} />
+      </View>
+
+      {/* Distance and details */}
+      <View className="flex flex-row items-center gap-2">
+        <View className="flex-1 rounded-lg bg-gray-100 px-3 py-2">
+          <SkeletonBox width="80%" height={16} />
+        </View>
+        <View className="flex-1 rounded-lg bg-gray-100 px-2 py-2">
+          <SkeletonBox width="90%" height={16} />
+        </View>
+      </View>
+    </View>
+  </View>
+);
+
+const QuickActionsSkeleton = () => (
+  <View className="px-2">
+    <View className="flex-row flex-wrap rounded-xl bg-white pt-3 shadow-sm">
+      {/* Location Status Skeleton */}
+      <View className="w-1/2 rounded-md bg-gray-100 px-2 py-3">
+        <View className="mb-1 flex-row items-center">
+          <Ionicons name="location-outline" size={14} color="#9ca3af" />
+          <SkeletonBox width={60} height={14} className="ml-1" />
+        </View>
+        <SkeletonBox width="90%" height={12} />
+      </View>
+
+      {/* Action Buttons Skeleton */}
+      <View className="w-1/2 flex-row justify-around pb-3">
+        {[...Array(3)].map((_, i) => (
+          <View key={i} className="items-center">
+            <View className="mb-2 h-12 w-12 rounded-full bg-gray-200 p-3" />
+            <SkeletonBox width={50} height={12} />
+          </View>
+        ))}
+      </View>
+    </View>
+  </View>
+);
 
 // Helper function to get toilet types as string
 const getTypesAsString = (types) => {
@@ -94,12 +192,12 @@ const LeafletMap = ({ location, facilities }) => {
         try {
             var map = L.map('map').setView([${userLat}, ${userLng}], 13);
             
-            // Use Google Maps tiles
-            L.tileLayer('https://www.google.cn/maps/vt?lyrs=m@189&gl=cn&x={x}&y={y}&z={z}', {
-                attribution: '© Google Maps',
-                maxZoom: 20,
-                subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
-            }).addTo(map);
+          
+              L.tileLayer('https://mt{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+                  attribution: '© Google Maps',
+                  maxZoom: 20,
+                  subdomains: ['0', '1', '2', '3']
+              }).addTo(map);
 
             var userIcon = L.divIcon({
                 html: '<div class="user-icon"></div>',
@@ -614,106 +712,64 @@ export default function UserHome() {
 
   return (
     <ScrollView className="flex-1 bg-gray-50">
-      {/* Loading indicators */}
-      {(loading || apiLoading || distanceLoading) && (
-        <View className="p-4">
-          <View className="flex-row items-center justify-center rounded-xl bg-blue-50 p-4">
-            <Ionicons
-              name={loading ? 'location' : apiLoading ? 'business' : 'navigate'}
-              size={20}
-              color="#2563eb"
-            />
-            <Text className="ml-2 font-semibold text-blue-600">
-              {loading
-                ? 'Getting your location...'
-                : apiLoading
-                  ? 'Loading toilet facilities...'
-                  : 'Calculating accurate distances...'}
-            </Text>
-          </View>
-          {distanceLoading && (
-            <View className="mt-2 flex-row items-center justify-center">
-              <Ionicons name="map" size={16} color="#3b82f6" />
-              <Text className="ml-1 text-center text-sm text-blue-500">
-                Using Google Maps for precise travel times
-              </Text>
-            </View>
-          )}
-        </View>
-      )}
-
-      {/* API Key Warning */}
-      {(!GOOGLE_API_KEY || GOOGLE_API_KEY === 'YOUR_GOOGLE_MAPS_API_KEY') && (
-        <View className="mx-4 mb-2">
-          <View className="rounded-xl border border-yellow-200 bg-yellow-50 p-4">
-            <View className="mb-1 flex-row items-center justify-center">
-              <Ionicons name="warning" size={20} color="#d97706" />
-              <Text className="ml-2 font-semibold text-yellow-800">
-                Google Maps API Key Required
-              </Text>
-            </View>
-            <Text className="text-center text-sm text-yellow-700">
-              Add your API key to get accurate distances and travel times
-            </Text>
-          </View>
-        </View>
-      )}
-
-      {/* Quick Actions */}
-      <View className="px-2">
-        <View className="flex-row flex-wrap  rounded-xl bg-white pt-3 shadow-sm">
-          {/* Enhanced Location Status - 2/5 width, wraps below if needed */}
-          <View className="  w-1/2 rounded-md bg-green-50 px-2">
-            {loading ? (
-              <View className="flex-row items-center justify-center p-3">
-                <Ionicons name="location" size={16} color="#6b7280" />
-                <Text className="ml-2 text-xs text-gray-600">Getting location...</Text>
-              </View>
-            ) : location?.coords ? (
-              <View className="rounded-lg bg-green-50 p-2">
-                <View className="mb-1 flex-row items-center">
-                  <Ionicons name="location" size={14} color="#059669" />
-                  <Text className="ml-1 font-semibold text-green-800">Location:</Text>
+      {/* Quick Actions - Show skeleton while loading */}
+      {loading ? (
+        <QuickActionsSkeleton />
+      ) : (
+        <View className="px-2">
+          <View className="flex-row flex-wrap rounded-xl bg-white pt-3 shadow-sm">
+            {/* Enhanced Location Status - 2/5 width, wraps below if needed */}
+            <View className="w-1/2 rounded-md bg-green-50 px-2">
+              {location?.coords ? (
+                <View className="rounded-lg bg-green-50 p-2">
+                  <View className="mb-1 flex-row items-center">
+                    <Ionicons name="location" size={14} color="#059669" />
+                    <Text className="ml-1 font-semibold text-green-800">Location:</Text>
+                  </View>
+                  <Text className="flex-wrap text-xs text-green-700">
+                    {address || 'Fetching address...'}
+                  </Text>
                 </View>
-                <Text className="flex-wrap text-xs text-green-700">
-                  {address || 'Fetching address...'}
-                </Text>
-              </View>
-            ) : (
-              <View className="flex-row items-center justify-center p-3">
-                <Ionicons name="location-outline" size={14} color="#ef4444" />
-                <Text className="ml-1 text-xs text-red-600">Unavailable</Text>
-              </View>
-            )}
-          </View>
-          {/* Action Buttons - 3/5 width */}
-          <View className="w-1/2 flex-row justify-around">
-            <Pressable className="items-center" onPress={refreshData}>
-              <View className="mb-2 rounded-full bg-blue-100 p-3">
-                <Ionicons name="refresh-outline" size={24} color="#2563eb" />
-              </View>
-              <Text className="text-sm font-medium text-gray-700">Refresh</Text>
-            </Pressable>
-            <Pressable className="items-center" onPress={() => router.push('/user/report')}>
-              <View className="mb-2 rounded-full bg-red-100 p-3">
-                <Ionicons name="alert-circle-outline" size={24} color="#dc2626" />
-              </View>
-              <Text className="text-sm font-medium text-gray-700">Complaint</Text>
-            </Pressable>
+              ) : (
+                <View className="flex-row items-center justify-center p-3">
+                  <Ionicons name="location-outline" size={14} color="#ef4444" />
+                  <Text className="ml-1 text-xs text-red-600">Unavailable</Text>
+                </View>
+              )}
+            </View>
+            {/* Action Buttons - 3/5 width */}
+            <View className="w-1/2 flex-row justify-around">
+              <Pressable className="items-center" onPress={refreshData}>
+                <View className="mb-2 rounded-full bg-blue-100 p-3">
+                  <Ionicons name="refresh-outline" size={24} color="#2563eb" />
+                </View>
+                <Text className="text-sm font-medium text-gray-700">Refresh</Text>
+              </Pressable>
+              <Pressable className="items-center" onPress={() => router.push('/user/report')}>
+                <View className="mb-2 rounded-full bg-red-100 p-3">
+                  <Ionicons name="alert-circle-outline" size={24} color="#dc2626" />
+                </View>
+                <Text className="text-sm font-medium text-gray-700">Complaint</Text>
+              </Pressable>
 
-            <Pressable className="items-center" onPress={() => router.push('/user/find')}>
-              <View className="mb-2 rounded-full bg-green-100 p-3">
-                <Ionicons name="search-outline" size={24} color="#059669" />
-              </View>
-              <Text className="text-sm font-medium text-gray-700">Search</Text>
-            </Pressable>
+              <Pressable className="items-center" onPress={() => router.push('/user/find')}>
+                <View className="mb-2 rounded-full bg-green-100 p-3">
+                  <Ionicons name="search-outline" size={24} color="#059669" />
+                </View>
+                <Text className="text-sm font-medium text-gray-700">Search</Text>
+              </Pressable>
+            </View>
           </View>
         </View>
-      </View>
+      )}
 
-      {/* Interactive Map - FIXED: No longer re-renders on every focus */}
-      {!loading && location && facilitiesWithDistance.length > 0 && (
-        <View className="">
+      {/* Interactive Map - Show skeleton while loading */}
+      {loading || !location || facilitiesWithDistance.length === 0 ? (
+        <View className="mt-2 px-2">
+          <MapSkeleton />
+        </View>
+      ) : (
+        <View className="mt-2 px-2">
           <LeafletMap location={location} facilities={facilitiesWithDistance} />
         </View>
       )}
@@ -734,7 +790,14 @@ export default function UserHome() {
           </Pressable>
         </View>
 
-        {facilitiesWithDistance.length === 0 && !loading && !apiLoading ? (
+        {/* Show skeleton while loading or actual data when loaded */}
+        {loading || apiLoading ? (
+          <>
+            {[...Array(3)].map((_, index) => (
+              <FacilitySkeleton key={index} index={index} />
+            ))}
+          </>
+        ) : facilitiesWithDistance.length === 0 ? (
           <View className="items-center rounded-lg bg-gray-100 p-6">
             <Ionicons name="business-outline" size={48} color="#9ca3af" />
             <Text className="mt-2 text-center text-gray-600">
@@ -818,21 +881,21 @@ export default function UserHome() {
                     <View className="flex-row items-center gap-1">
                       <Ionicons name="location-outline" size={14} color="#2563eb" />
                       <Text className="text-sm font-semibold text-blue-700">
-                        {facility.distanceText || 'Calculating...'}
+                        {distanceLoading ? 'Cal...' : facility.distanceText || 'Cal...'}
                       </Text>
                     </View>
 
-                    <View className="flex-row items-center gap-1">
+                    <View className="flex-row items-center ">
                       <Ionicons name="time-outline" size={14} color="#059669" />
                       <Text className="text-sm text-green-700">
-                        {facility.durationText || 'Calculating...'}
+                        {distanceLoading ? 'Cal...' : facility.durationText || 'Cal...'}
                       </Text>
                     </View>
                   </View>
 
                   {/* Toilet Types & Accessibility */}
                   <View className="flex flex-row items-center justify-center gap-3 rounded-lg bg-blue-50 px-2 py-2">
-                    <View className="flex-row items-center gap-1">
+                    <View className="gap flex-row items-center">
                       <Ionicons name="people-outline" size={14} color="#7c3aed" />
                       <Text className="text-sm text-purple-600" numberOfLines={2}>
                         {facility.typesString || getTypesAsString(facility.type)}
@@ -840,7 +903,7 @@ export default function UserHome() {
                     </View>
 
                     {facility.accessible && (
-                      <View className="flex-row items-center gap-1">
+                      <View className="gap flex-row items-center">
                         <Ionicons name="accessibility" size={14} color="#059669" />
                         <Text className="text-sm text-green-600">Accessible</Text>
                       </View>
