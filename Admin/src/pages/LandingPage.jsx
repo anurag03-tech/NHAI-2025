@@ -178,7 +178,7 @@ export default function LandingPage() {
                   />
                   <div>
                     <h2 className="text-2xl font-bold text-blue-600 uppercase tracking-wide">
-                      NHAI Toilets
+                      NHAI
                     </h2>
                     <p className="text-base text-gray-700 font-medium">
                       National Highway Authority of India
@@ -196,7 +196,7 @@ export default function LandingPage() {
                   </span>
                 </h1>
 
-                <p className="text-base text-gray-600 leading-relaxed">
+                <p className="text-lg  text-gray-700 leading-relaxed">
                   Complete solution for managing toilet facilities across
                   National Highways. Mobile app for travelers and comprehensive
                   web dashboard for moderators and NHAI admins.
