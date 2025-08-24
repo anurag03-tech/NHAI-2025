@@ -1,6 +1,6 @@
 # NHAI Toilets Management System
 
-A comprehensive toilet management system for NHAI (National Highways Authority of India) consisting of an admin panel, backend API, and mobile application.
+A complete solution for managing toilet facilities across India’s National Highways, featuring a mobile app for travelers and a comprehensive web dashboard for moderators and NHAI administrators.
 
 ## 🚀 Get Started
 
