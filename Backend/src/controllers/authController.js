@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
 const User = require("../models/userModel");
-const { sendModeratorCredentials } = require("../utils/emailService"); // Add this import
+const { sendModeratorCredentials } = require("../utils/emailService");
 
 // Generate JWT
 const generateToken = (id) => {
@@ -24,12 +24,12 @@ exports.login = async (req, res) => {
 
     const token = generateToken(user._id);
 
-    // ✅ Set cookie
+    // ✅ Universal cookie settings - works for both cross-origin and same-origin
     res.cookie("token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
+      secure: true, // Always true for HTTPS (required for sameSite: "none")
+      sameSite: "none", // Allows cross-origin requests
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
 
     res.json({
@@ -45,18 +45,20 @@ exports.login = async (req, res) => {
 };
 
 exports.logout = (req, res) => {
-  res.clearCookie("token");
+  // ✅ Clear cookie with same settings
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: true,
+    sameSite: "none",
+  });
   res.json({ message: "Logged out successfully" });
 };
 
-// @desc    Admin creates moderator
-// @route   POST /api/auth/create-moderator
-// @access  Admin
+// Rest of your functions remain the same...
 exports.createModerator = async (req, res) => {
   const { name, email } = req.body;
 
   try {
-    // Check if user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res
@@ -64,10 +66,8 @@ exports.createModerator = async (req, res) => {
         .json({ message: "User with this email already exists" });
     }
 
-    // Generate random password
     const randomPass = crypto.randomBytes(6).toString("hex");
 
-    // Save moderator with plain password (hook will hash it)
     const moderator = await User.create({
       name,
       email,
@@ -75,7 +75,6 @@ exports.createModerator = async (req, res) => {
       role: "Moderator",
     });
 
-    // Send email with credentials
     const emailResult = await sendModeratorCredentials(email, name, randomPass);
 
     if (emailResult.success) {
@@ -103,7 +102,7 @@ exports.createModerator = async (req, res) => {
           email: moderator.email,
           role: moderator.role,
         },
-        tempPassword: randomPass, // Include password in response if email fails
+        tempPassword: randomPass,
         emailSent: false,
         emailError: emailResult.error,
       });
@@ -113,7 +112,6 @@ exports.createModerator = async (req, res) => {
   }
 };
 
-// GET /api/auth/me - Check current authentication status
 exports.getCurrentUser = async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select("-password");
@@ -129,9 +127,6 @@ exports.getCurrentUser = async (req, res) => {
   }
 };
 
-// @desc    Get all moderators (Admin only)
-// @route   GET /api/auth/moderators
-// @access  Admin
 exports.getAllModerators = async (req, res) => {
   try {
     const moderators = await User.find({ role: "Moderator" }).select(
@@ -146,8 +141,3 @@ exports.getAllModerators = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
-
-// module.exports = {
-
-//   getCurrentUser
-// };
