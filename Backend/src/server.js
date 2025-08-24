@@ -23,18 +23,8 @@ app.use(express.urlencoded({ limit: "10mb", extended: true }));
 
 app.use(
   cors({
-    origin: function (origin, callback) {
-      // Allow null origin (mobile apps) + your web URLs
-      if (
-        !origin ||
-        [process.env.CLIENT_URL, process.env.CLIENT_URL_PROD].includes(origin)
-      ) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    credentials: true, // keep cookies for web if needed
+    origin: NODE_ENV === "development" ? CLIENT_URL : CLIENT_URL_PROD,
+    credentials: true,
   })
 );
 
