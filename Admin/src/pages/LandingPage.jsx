@@ -3,17 +3,18 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import {
   Download,
-  Smartphone,
+  MessageSquareWarning,
   Monitor,
-  Users,
+  MessageSquare,
   Shield,
+  Smartphone,
+  Users,
   MapPin,
   Star,
   MessageCircle,
   BarChart3,
   CheckCircle,
   Globe,
-  Zap,
 } from "lucide-react";
 
 export default function LandingPage() {
@@ -82,22 +83,22 @@ export default function LandingPage() {
       desc: "Locate facilities along your route with real-time GPS tracking",
     },
     {
-      icon: Star,
-      title: "Rate & Review",
-      desc: "Share your experience and help improve facilities for everyone",
-    },
-    {
       icon: Globe,
       title: "Real-time Updates",
       desc: "Get current facility status, cleanliness, and availability",
     },
     {
-      icon: Smartphone,
-      title: "Offline Access",
-      desc: "Download facility data for use without internet connection",
+      icon: Star,
+      title: "Rate & Review",
+      desc: "Share your experience and help improve facilities for everyone",
+    },
+
+    {
+      icon: MessageSquareWarning,
+      title: "Submit Complaints",
+      desc: "Report facility issues, cleanliness problems, and maintenance concerns",
     },
   ];
-
   const adminFeatures = [
     {
       icon: Monitor,
@@ -107,17 +108,17 @@ export default function LandingPage() {
     {
       icon: BarChart3,
       title: "Analytics & Reports",
-      desc: "Comprehensive usage statistics and performance metrics",
-    },
-    {
-      icon: Users,
-      title: "User Management",
-      desc: "Monitor user activity and manage system access",
+      desc: "Comprehensive Moderator statistics and performance metrics",
     },
     {
       icon: MessageCircle,
       title: "Complaint Resolution",
       desc: "Efficient handling of user feedback and issues",
+    },
+    {
+      icon: Shield,
+      title: "Send Penalties",
+      desc: "Issue penalties for Moderator violations and non-compliance",
     },
   ];
 
@@ -125,15 +126,23 @@ export default function LandingPage() {
     {
       icon: Shield,
       title: "Facility Management",
-      desc: "Add and update toilet information",
+      desc: "Add and update toilet information and details",
+    },
+    {
+      icon: MessageSquare,
+      title: "Resolve User Complaints",
+      desc: "Handle and respond to facility-related issues",
     },
     {
       icon: CheckCircle,
       title: "Status Updates",
-      desc: "Maintain real-time facility status",
+      desc: "Maintain real-time facility availability status",
     },
-    { icon: Star, title: "Review Monitoring", desc: "Oversee user feedback" },
-    { icon: Zap, title: "Quick Actions", desc: "Fast facility updates" },
+    {
+      icon: Star,
+      title: "Review Monitoring",
+      desc: "Oversee and manage user feedback and ratings",
+    },
   ];
 
   // Show loading while checking auth
@@ -310,91 +319,134 @@ export default function LandingPage() {
       </div>
 
       {/* Features Section */}
-      <div className="py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* User Features */}
-          <div className="mb-16">
-            <div className="text-center mb-10">
-              <h2 className="text-3xl font-bold text-gray-900 mb-3">
-                For Users
-              </h2>
-              <p className="text-lg text-gray-600">Mobile App Features</p>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {userFeatures.map((feature, index) => (
-                <div
-                  key={index}
-                  className="bg-white/80 backdrop-blur-sm rounded-xl p-5 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-white/30 group"
-                >
-                  <div className="p-2 bg-gradient-to-br from-green-500 to-emerald-500 rounded-lg w-fit mb-3 group-hover:scale-110 transition-transform duration-300">
-                    <feature.icon className="h-5 w-5 text-white" />
-                  </div>
-                  <h3 className="text-base font-semibold text-gray-900 mb-2">
-                    {feature.title}
-                  </h3>
-                  <p className="text-gray-600 text-sm leading-relaxed">
-                    {feature.desc}
-                  </p>
-                </div>
-              ))}
-            </div>
+      <div className="py-4">
+        <div className="w-full px-4">
+          {/* Section Header */}
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold text-gray-900 mb-2">
+              Platform Features
+            </h2>
+            <p className="text-xl text-gray-600">
+              Comprehensive solutions for all user types
+            </p>
           </div>
 
-          {/* Admin Features */}
-          <div className="mb-16">
-            <div className="text-center mb-10">
-              <h2 className="text-3xl font-bold text-gray-900 mb-3">
-                For NHAI Administrators
-              </h2>
-              <p className="text-lg text-gray-600">Web Dashboard Features</p>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {adminFeatures.map((feature, index) => (
-                <div
-                  key={index}
-                  className="bg-white/80 backdrop-blur-sm rounded-xl p-5 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-white/30 group"
-                >
-                  <div className="p-2 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-lg w-fit mb-3 group-hover:scale-110 transition-transform duration-300">
-                    <feature.icon className="h-5 w-5 text-white" />
-                  </div>
-                  <h3 className="text-base font-semibold text-gray-900 mb-2">
-                    {feature.title}
+          {/* Three Column Layout */}
+          <div className="flex flex-col lg:flex-row gap-4">
+            {/* Users Column */}
+            <div className="flex-1 bg-gradient-to-br from-green-100 to-emerald-100 rounded-2xl p-6 border border-green-200">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="p-3 bg-gradient-to-br from-green-500 to-emerald-500 rounded-full">
+                  <Smartphone className="h-6 w-6 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-bold text-gray-900">
+                    For Users
                   </h3>
-                  <p className="text-gray-600 text-sm leading-relaxed">
-                    {feature.desc}
+                  <p className="text-green-600 font-medium">
+                    Mobile App Features
                   </p>
                 </div>
-              ))}
-            </div>
-          </div>
+              </div>
 
-          {/* Moderator Features */}
-          <div>
-            <div className="text-center mb-10">
-              <h2 className="text-3xl font-bold text-gray-900 mb-3">
-                For Moderators
-              </h2>
-              <p className="text-lg text-gray-600">
-                Management Dashboard Features
-              </p>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {moderatorFeatures.map((feature, index) => (
-                <div
-                  key={index}
-                  className="bg-white/80 backdrop-blur-sm rounded-xl p-5 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-white/30 group"
-                >
-                  <div className="p-2 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg w-fit mb-3 group-hover:scale-110 transition-transform duration-300">
-                    <feature.icon className="h-5 w-5 text-white" />
+              <div className="space-y-2">
+                {userFeatures.map((feature, index) => (
+                  <div
+                    key={index}
+                    className="bg-white/80 backdrop-blur-sm rounded-lg p-3 shadow-sm hover:shadow-md transition-all duration-300 border border-white/50 group"
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className="p-1.5 bg-gradient-to-br from-green-500 to-emerald-500 rounded-md flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
+                        <feature.icon className="h-4 w-4 text-white" />
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-gray-900 mb-1">
+                          {feature.title}
+                        </h4>
+                        <p className="text-gray-600  leading-relaxed">
+                          {feature.desc}
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                  <h3 className="text-base font-semibold text-gray-900 mb-2">
-                    {feature.title}
-                  </h3>
-                  <p className="text-gray-600 text-sm leading-relaxed">
-                    {feature.desc}
-                  </p>
+                ))}
+              </div>
+            </div>
+
+            {/* Moderators Column */}
+            <div className="flex-1 bg-gradient-to-br from-purple-100 to-pink-100 rounded-2xl p-6 border border-purple-200">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="p-3 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full">
+                  <Users className="h-6 w-6 text-white" />
                 </div>
-              ))}
+                <div>
+                  <h3 className="text-2xl font-bold text-gray-900">
+                    For Moderators
+                  </h3>
+                  <p className="text-purple-600 font-medium">Webapp Features</p>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                {moderatorFeatures.map((feature, index) => (
+                  <div
+                    key={index}
+                    className="bg-white/80 backdrop-blur-sm rounded-lg p-3 shadow-sm hover:shadow-md transition-all duration-300 border border-white/50 group"
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className="p-1.5 bg-gradient-to-br from-purple-500 to-pink-500 rounded-md flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
+                        <feature.icon className="h-4 w-4 text-white" />
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-gray-900  mb-1">
+                          {feature.title}
+                        </h4>
+                        <p className="text-gray-600 leading-relaxed">
+                          {feature.desc}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Admins Column */}
+            <div className="flex-1 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-2xl p-6 border border-blue-200">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="p-3 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-full">
+                  <Shield className="h-6 w-6 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-bold text-gray-900">
+                    For NHAI Admins
+                  </h3>
+                  <p className="text-blue-600 font-medium">Webapp Features</p>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                {adminFeatures.map((feature, index) => (
+                  <div
+                    key={index}
+                    className="bg-white/80 backdrop-blur-sm rounded-lg p-3 shadow-sm hover:shadow-md transition-all duration-300 border border-white/50 group"
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className="p-1.5 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-md flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
+                        <feature.icon className="h-4 w-4 text-white" />
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-gray-900  mb-1">
+                          {feature.title}
+                        </h4>
+                        <p className="text-gray-600 leading-relaxed">
+                          {feature.desc}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>

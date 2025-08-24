@@ -122,7 +122,7 @@ export default function Header({ onToggleSidebar, isSidebarOpen }) {
                   </div>
                   <button
                     onClick={handleLogout}
-                    className="bg-red-100 text-red-700 px-3 py-1.5 rounded-md text-sm hover:bg-red-200 transition-colors flex items-center gap-1"
+                    className="bg-red-100 text-red-700 px-3 py-1.5 rounded-md text-sm hover:bg-red-200 transition-colors flex items-center gap-1 cursor-pointer"
                   >
                     <LogOut className="h-3 w-3" />
                     Logout
@@ -157,7 +157,7 @@ export default function Header({ onToggleSidebar, isSidebarOpen }) {
                         </div>
                         <button
                           onClick={handleLogout}
-                          className="w-full text-left px-4 py-2 text-sm text-red-700 hover:bg-red-50 transition-colors flex items-center gap-2"
+                          className="w-full text-left px-4 py-2 text-sm text-red-700 hover:bg-red-50 transition-colors flex items-center gap-2 cursor-pointer"
                         >
                           <LogOut className="h-3 w-3" />
                           Logout
@@ -170,7 +170,7 @@ export default function Header({ onToggleSidebar, isSidebarOpen }) {
             ) : (
               <button
                 onClick={handleLogin}
-                className="bg-blue-600 text-white px-3 sm:px-4 py-2 rounded-md text-sm hover:bg-blue-700 transition-colors"
+                className="bg-blue-600 text-white px-3 sm:px-4 py-2 rounded-md text-sm hover:bg-blue-700 transition-colors cursor-pointer"
               >
                 Login
               </button>

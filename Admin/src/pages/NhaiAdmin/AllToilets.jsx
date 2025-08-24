@@ -909,196 +909,190 @@ const AllToilets = () => {
             ))}
           </div>
         )}
-        {/* Enhanced Details Dialog with Vertical Layout */}
+        {/* Enhanced Details Dialog with Optimized Layout */}
         <Dialog open={showDetailsDialog} onOpenChange={setShowDetailsDialog}>
-          <DialogContent className="!max-w-6xl max-h-[90vh] overflow-y-auto bg-white/95 backdrop-blur-sm border-0 shadow-2xl">
-            <DialogHeader>
-              <DialogTitle className="text-2xl font-bold text-slate-700 flex items-center gap-2">
-                <div className="p-2 bg-blue-100 rounded-lg">
-                  <MapPin className="h-5 w-5 text-blue-600" />
+          <DialogContent className="!max-w-7xl max-h-[95vh] overflow-y-auto bg-white/98 backdrop-blur-sm border-0 shadow-2xl p-4">
+            <DialogHeader className="pb-4">
+              <DialogTitle className="text-xl font-bold text-slate-700 flex items-center gap-3">
+                <div className="p-1.5 bg-blue-100 rounded-lg">
+                  <MapPin className="h-4 w-4 text-blue-600" />
                 </div>
                 {selectedToilet?.name}
               </DialogTitle>
-              <DialogDescription className="text-slate-600 flex items-center gap-2">
-                <Navigation className="h-4 w-4" />
+              <DialogDescription className="text-slate-600 flex items-center gap-2 text-sm">
+                <Navigation className="h-3 w-3" />
                 {selectedToilet?.highway}
               </DialogDescription>
             </DialogHeader>
 
             {selectedToilet && (
-              <div className="space-y-6">
-                {/* Status and Type */}
-                <div className="flex flex-wrap gap-3">
+              <div className="space-y-4">
+                {/* Status and Type - Compact */}
+                <div className="flex flex-wrap gap-2">
                   <Badge
                     variant={getStatusBadgeVariant(selectedToilet.status)}
-                    className="flex items-center gap-2 px-3 py-1 text-sm font-medium"
+                    className="flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium"
                   >
                     {getStatusIcon(selectedToilet.status)}
                     {selectedToilet.status}
                   </Badge>
-                  {/* Render multiple types in dialog */}
                   {renderToiletTypes(selectedToilet.type)}
                   {selectedToilet.accessible && (
                     <Badge
                       variant="outline"
-                      className="px-3 py-1 text-sm bg-green-50 text-green-700 border-green-200"
+                      className="px-2.5 py-1 text-xs bg-green-50 text-green-700 border-green-200"
                     >
                       Wheelchair Accessible
                     </Badge>
                   )}
                 </div>
 
-                {/* Three Column Vertical Layout: Images, Map, Location & Moderator */}
-                <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-                  {/* Images Column */}
-                  <Card className="bg-purple-50 border-purple-200">
-                    <CardHeader className="pb-3">
-                      <CardTitle className="text-lg flex items-center gap-2">
-                        <ImageIcon className="h-5 w-5 text-purple-600" />
-                        Images ({selectedToilet.images?.length || 0})
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      {selectedToilet.images &&
-                      selectedToilet.images.length > 0 ? (
-                        <div className="space-y-3 max-h-80 overflow-y-auto">
-                          {selectedToilet.images.map((image, index) => (
-                            <div
-                              key={index}
-                              className="aspect-video rounded-xl overflow-hidden bg-white border-2 border-purple-200 hover:border-purple-400 transition-colors group"
-                            >
-                              <img
-                                src={`data:image/jpeg;base64,${image.data}`}
-                                alt={`${selectedToilet.name} - Image ${
-                                  index + 1
-                                }`}
-                                className="w-full h-full object-cover group-hover:scale-105 transition-transform"
-                              />
-                            </div>
-                          ))}
-                        </div>
-                      ) : (
-                        <div className="h-40 flex items-center justify-center bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl border-2 border-purple-200">
-                          <div className="text-center">
-                            <Camera className="h-8 w-8 text-purple-400 mx-auto mb-2" />
-                            <p className="text-sm text-purple-600">
-                              No images available
-                            </p>
+                {/* Main Content Grid - Optimized Layout */}
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 ">
+                  {/* Images Column - Reduced from full column */}
+                  <div className="lg:col-span-4">
+                    <Card className="bg-purple-50/70 border-purple-200 h-full p-0">
+                      <CardHeader className="pb-2 px-3 pt-3">
+                        <CardTitle className="text-base flex items-center gap-2">
+                          <ImageIcon className="h-4 w-4 text-purple-600" />
+                          Images ({selectedToilet.images?.length || 0})
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="px-3 pb-3">
+                        {selectedToilet.images &&
+                        selectedToilet.images.length > 0 ? (
+                          <div className="space-y-2 max-h-64 overflow-y-auto">
+                            {selectedToilet.images.map((image, index) => (
+                              <div
+                                key={index}
+                                className="aspect-video rounded-lg overflow-hidden bg-white border border-purple-200 hover:border-purple-400 transition-colors group"
+                              >
+                                <img
+                                  src={`data:image/jpeg;base64,${image.data}`}
+                                  alt={`${selectedToilet.name} - Image ${
+                                    index + 1
+                                  }`}
+                                  className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                                />
+                              </div>
+                            ))}
                           </div>
-                        </div>
-                      )}
-                    </CardContent>
-                  </Card>
+                        ) : (
+                          <div className="h-32 flex items-center justify-center bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg border border-purple-200">
+                            <div className="text-center">
+                              <Camera className="h-6 w-6 text-purple-400 mx-auto mb-1" />
+                              <p className="text-xs text-purple-600">
+                                No images available
+                              </p>
+                            </div>
+                          </div>
+                        )}
+                      </CardContent>
+                    </Card>
+                  </div>
 
-                  {/* Map Column */}
-                  <Card className="bg-slate-50 border-slate-200">
-                    <CardHeader className="pb-3">
-                      <CardTitle className="text-lg flex items-center gap-2">
-                        <MapPin className="h-5 w-5 text-blue-600" />
-                        Location Map
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="h-80 rounded-xl overflow-hidden border-2 border-slate-200 shadow-md">
-                        <MapContainer
-                          center={[
-                            selectedToilet.location.latitude,
-                            selectedToilet.location.longitude,
-                          ]}
-                          zoom={15}
-                          scrollWheelZoom={true}
-                          className="h-full w-full"
-                        >
-                          <TileLayer
-                            attribution="&copy; OpenStreetMap contributors"
-                            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                          />
-                          <Marker
-                            position={[
+                  {/* Map Column - Expanded */}
+                  <div className="lg:col-span-5">
+                    <Card className="bg-slate-50/70 border-slate-200 h-full p-0">
+                      <CardHeader className="pb-2 px-3 pt-3">
+                        <CardTitle className="text-base flex items-center gap-2">
+                          <MapPin className="h-4 w-4 text-blue-600" />
+                          Location Map
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="px-3 pb-3">
+                        <div className="h-100 rounded-lg overflow-hidden border border-slate-200 shadow-sm">
+                          <MapContainer
+                            center={[
                               selectedToilet.location.latitude,
                               selectedToilet.location.longitude,
                             ]}
+                            zoom={15}
+                            scrollWheelZoom={true}
+                            className="h-full w-full"
                           >
-                            <Popup>
-                              <div className="p-2">
-                                <h3 className="font-semibold">
-                                  {selectedToilet.name}
-                                </h3>
-                                <p className="text-sm text-gray-600">
-                                  {selectedToilet.highway}
-                                </p>
-                                <div className="text-xs text-gray-500 mt-1 space-y-1">
-                                  <p>
-                                    {selectedToilet.location.latitude.toFixed(
-                                      6
-                                    )}
-                                    ,{" "}
-                                    {selectedToilet.location.longitude.toFixed(
-                                      6
-                                    )}
+                            <TileLayer
+                              attribution="Google Maps"
+                              url="https://www.google.cn/maps/vt?lyrs=m@189&gl=cn&x={x}&y={y}&z={z}"
+                            />
+                            <Marker
+                              position={[
+                                selectedToilet.location.latitude,
+                                selectedToilet.location.longitude,
+                              ]}
+                            >
+                              <Popup>
+                                <div className="p-2">
+                                  <h3 className="font-semibold text-sm">
+                                    {selectedToilet.name}
+                                  </h3>
+                                  <p className="text-xs text-gray-600">
+                                    {selectedToilet.highway}
                                   </p>
-                                  <p>
-                                    Types:{" "}
-                                    {getTypesAsString(selectedToilet.type)}
-                                  </p>
+                                  <div className="text-xs text-gray-500 mt-1 space-y-0.5">
+                                    <p>
+                                      {selectedToilet.location.latitude.toFixed(
+                                        6
+                                      )}
+                                      ,{" "}
+                                      {selectedToilet.location.longitude.toFixed(
+                                        6
+                                      )}
+                                    </p>
+                                    <p>
+                                      Types:{" "}
+                                      {getTypesAsString(selectedToilet.type)}
+                                    </p>
+                                  </div>
                                 </div>
-                              </div>
-                            </Popup>
-                          </Marker>
-                        </MapContainer>
-                      </div>
-                    </CardContent>
-                  </Card>
+                              </Popup>
+                            </Marker>
+                          </MapContainer>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
 
-                  {/* Location & Moderator Details Column */}
-                  <div className="space-y-4">
-                    {/* Location Details */}
-                    <Card className="bg-slate-50 border-slate-200">
-                      <CardHeader className="pb-3">
-                        <CardTitle className="text-lg flex items-center gap-2">
-                          <Navigation className="h-5 w-5 text-green-600" />
-                          Location Details
+                  {/* Details Column - Compact */}
+                  <div className="lg:col-span-3 space-y-2 p-0">
+                    {/* Location Details - Compact */}
+                    <Card className="bg-slate-50/70 border-slate-200 p-2">
+                      <CardHeader className="px-3 py-0">
+                        <CardTitle className="text-base flex items-center gap-2">
+                          <Navigation className="h-4 w-4 text-green-600" />
+                          Details
                         </CardTitle>
                       </CardHeader>
-                      <CardContent className="space-y-4">
-                        <div className="grid grid-cols-1 gap-3">
-                          <div className="p-3 bg-white rounded-lg">
-                            <span className="text-sm text-slate-500">
+                      <CardContent className="px-3 space-y-1">
+                        <div className="grid grid-cols-2 gap-2">
+                          <div className="p-1 bg-white rounded text-center">
+                            <span className="text text-slate-500 block">
                               Latitude
                             </span>
-                            <p className="font-mono text-sm font-medium text-slate-700">
-                              {selectedToilet.location.latitude}
+                            <p className="font-mono text font-medium text-slate-700 truncate">
+                              {selectedToilet.location.latitude.toFixed(4)}
                             </p>
                           </div>
-                          <div className="p-3 bg-white rounded-lg">
-                            <span className="text-sm text-slate-500">
+                          <div className="p-1 bg-white rounded text-center">
+                            <span className="text text-slate-500 block">
                               Longitude
                             </span>
-                            <p className="font-mono text-sm font-medium text-slate-700">
-                              {selectedToilet.location.longitude}
+                            <p className="font-mono text font-medium text-slate-700 truncate">
+                              {selectedToilet.location.longitude.toFixed(4)}
                             </p>
                           </div>
                         </div>
+
                         {selectedToilet.location.address && (
-                          <div className="p-3 bg-white rounded-lg">
-                            <span className="text-sm text-slate-500">
+                          <div className="p-2 bg-white rounded">
+                            <span className="text text-slate-500 block">
                               Address
                             </span>
-                            <p className="mt-1 text-sm text-slate-700">
+                            <p className="text text-slate-700 mt-0.5 line-clamp-2">
                               {selectedToilet.location.address}
                             </p>
                           </div>
                         )}
-
-                        {/* Toilet Types Section */}
-                        <div className="p-3 bg-white rounded-lg">
-                          <span className="text-sm text-slate-500 block mb-2">
-                            Available Types
-                          </span>
-                          <div className="flex flex-wrap gap-2">
-                            {renderToiletTypes(selectedToilet.type)}
-                          </div>
-                        </div>
 
                         <Button
                           variant="outline"
@@ -1108,64 +1102,61 @@ const AllToilets = () => {
                               selectedToilet.location.longitude
                             )
                           }
-                          className="w-full bg-green-50 hover:bg-green-100 border-green-200 text-green-700"
-                          size="sm"
+                          className="w-full bg-green-50 hover:bg-green-100 border-green-300 text-green-700 h-8 text-xs"
                         >
-                          <Navigation className="h-4 w-4 mr-2" />
-                          Open in Google Maps
+                          <Navigation className="h-3 w-3 mr-1" />
+                          Navigation
                         </Button>
                       </CardContent>
                     </Card>
 
-                    {/* Moderator Details */}
-                    <Card className="bg-indigo-50 border-indigo-200">
-                      <CardHeader className="pb-3">
-                        <CardTitle className="text-lg flex items-center gap-2">
-                          <UserCheck className="h-5 w-5 text-indigo-600" />
+                    {/* Moderator Details - Compact */}
+                    <Card className="bg-indigo-50/70 border-indigo-200 p-2">
+                      <CardHeader className=" py-0">
+                        <CardTitle className="text-base flex items-center ">
+                          <UserCheck className="h-4 w-4 text-indigo-600 " />
                           Added By
                         </CardTitle>
                       </CardHeader>
-                      <CardContent>
+                      <CardContent className="px-3 pb-1">
                         {selectedToilet.createdBy ? (
-                          <div className="space-y-3">
-                            <div className="p-3 bg-white rounded-lg">
-                              <span className="text-sm text-slate-500">
+                          <div className="space-y-1">
+                            <div className="p-2 bg-white rounded">
+                              <span className="text-xs text-slate-500 block">
                                 Name
                               </span>
-                              <p className="text-sm font-semibold text-slate-700">
+                              <p className="text-xs font-semibold text-slate-700">
                                 {selectedToilet.createdBy.name}
                               </p>
                             </div>
-                            <div className="p-3 bg-white rounded-lg">
-                              <span className="text-sm text-slate-500">
+                            <div className="p-2 bg-white rounded">
+                              <span className="text-xs text-slate-500 block">
                                 Email
                               </span>
-                              <div className="flex items-center gap-2 mt-1">
-                                <Mail className="h-4 w-4 text-slate-400" />
-                                <p className="text-sm text-slate-700">
+                              <div className="flex items-center gap-1 mt-0.5">
+                                <Mail className="h-3 w-3 text-slate-400 flex-shrink-0" />
+                                <p className="text-xs text-slate-700 truncate">
                                   {selectedToilet.createdBy.email}
                                 </p>
                               </div>
                             </div>
-                            <div className="p-3 bg-white rounded-lg">
-                              <span className="text-sm text-slate-500">
+                            <div className="p-2 bg-white rounded">
+                              <span className="text-xs text-slate-500 block mb-1">
                                 Role
                               </span>
-                              <div className="mt-1">
-                                <Badge
-                                  variant="outline"
-                                  className="bg-indigo-50 text-indigo-700 border-indigo-200"
-                                >
-                                  <Building className="h-3 w-3 mr-1" />
-                                  {selectedToilet.createdBy.role}
-                                </Badge>
-                              </div>
+                              <Badge
+                                variant="outline"
+                                className="bg-indigo-50 text-indigo-700 border-indigo-200 text-xs"
+                              >
+                                <Building className="h-2 w-2 mr-1" />
+                                {selectedToilet.createdBy.role}
+                              </Badge>
                             </div>
                           </div>
                         ) : (
-                          <div className="p-3 bg-white rounded-lg text-center">
-                            <p className="text-sm text-slate-500">
-                              Moderator information not available
+                          <div className="p-2 bg-white rounded text-center">
+                            <p className="text-xs text-slate-500">
+                              Info not available
                             </p>
                           </div>
                         )}
@@ -1174,69 +1165,116 @@ const AllToilets = () => {
                   </div>
                 </div>
 
-                {/* Reviews Section */}
+                {/* Enhanced Reviews Section - Row Layout */}
                 {selectedToilet.reviews &&
                   selectedToilet.reviews.length > 0 && (
-                    <Card className="bg-yellow-50 border-yellow-200">
-                      <CardHeader className="pb-3">
+                    <Card className="bg-yellow-50/70 border-yellow-200 p-2">
+                      <CardHeader className="py-2 px-4">
                         <CardTitle className="text-lg flex items-center justify-between">
                           <div className="flex items-center gap-2">
                             <Star className="h-5 w-5 text-yellow-600" />
                             Reviews ({selectedToilet.reviews.length})
                           </div>
-                          <div className="flex items-center gap-2 bg-yellow-100 px-3 py-1 rounded-full">
+                          <div className="flex items-center gap-1 bg-yellow-100 px-3 py-1 rounded-full">
                             <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                            <span className="font-semibold text-yellow-700">
+                            <span className="font-semibold text-yellow-700 text-sm">
                               {calculateAverageRating(selectedToilet.reviews)}{" "}
-                              average
+                              avg
                             </span>
                           </div>
                         </CardTitle>
                       </CardHeader>
-                      <CardContent>
-                        <div className="space-y-4 max-h-60 overflow-y-auto">
-                          {selectedToilet.reviews.map((review) => (
+
+                      <CardContent className="px-4 pb-4">
+                        <div className="space-y-4 max-h-80 overflow-y-auto">
+                          {selectedToilet.reviews.map((review, index) => (
                             <div
                               key={review._id}
-                              className="bg-white border border-yellow-200 rounded-lg p-4"
+                              className="bg-white border border-yellow-200 rounded-lg p-4 hover:shadow-md transition-shadow"
                             >
-                              <div className="flex justify-between items-start mb-3">
-                                <div>
-                                  <p className="font-semibold text-slate-700">
-                                    {review.username}
-                                  </p>
-                                  <div className="flex items-center gap-1">
-                                    {[...Array(5)].map((_, i) => (
-                                      <Star
-                                        key={i}
-                                        className={`h-4 w-4 ${
-                                          i < review.rating
-                                            ? "fill-yellow-400 text-yellow-400"
-                                            : "text-slate-300"
-                                        }`}
+                              {/* Row Layout: Photo Left, Content Right */}
+                              <div className="flex gap-4">
+                                {/* Left Side - Photo or Blank */}
+                                <div className="flex-shrink-0 w-32 h-32">
+                                  {review.photos && review.photos.length > 0 ? (
+                                    <div className="relative w-full h-full">
+                                      <img
+                                        src={`data:image/jpeg;base64,${review.photos[0]}`}
+                                        alt={`Review by ${review.username}`}
+                                        className="w-full h-full object-cover rounded-lg border-2 border-gray-200"
+                                        onError={(e) => {
+                                          e.target.style.display = "none";
+                                          e.target.nextElementSibling.style.display =
+                                            "flex";
+                                        }}
                                       />
-                                    ))}
+                                      {/* Fallback for broken image */}
+                                      <div className="hidden w-full h-full bg-gray-100 rounded-lg border-2 border-gray-200 items-center justify-center">
+                                        <Camera className="h-6 w-6 text-gray-400" />
+                                      </div>
+                                      {/* Multiple photos indicator */}
+                                      {review.photos.length > 1 && (
+                                        <div className="absolute -bottom-1 -right-1 bg-yellow-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
+                                          +{review.photos.length - 1}
+                                        </div>
+                                      )}
+                                    </div>
+                                  ) : (
+                                    /* Blank placeholder when no photo */
+                                    <div className="w-full h-full bg-gray-100 rounded-lg border-2 border-gray-200 flex items-center justify-center">
+                                      <div className="text-center">
+                                        <Camera className="h-5 w-5 text-gray-400 mx-auto mb-1" />
+                                        <span className="text-xs text-gray-400">
+                                          No photo
+                                        </span>
+                                      </div>
+                                    </div>
+                                  )}
+                                </div>
+
+                                {/* Right Side - Content */}
+                                <div className="flex-1 min-w-0">
+                                  {/* User and Rating Row */}
+                                  <div className="flex items-center justify-between mb-2">
+                                    <div className="flex items-center gap-2">
+                                      <h4 className="font-semibold text-gray-800 truncate">
+                                        {review.username}
+                                      </h4>
+                                      <div className="flex items-center gap-0.5">
+                                        {[...Array(5)].map((_, i) => (
+                                          <Star
+                                            key={i}
+                                            className={`h-3 w-3 ${
+                                              i < review.rating
+                                                ? "fill-yellow-400 text-yellow-400"
+                                                : "text-gray-300"
+                                            }`}
+                                          />
+                                        ))}
+                                      </div>
+                                    </div>
+                                    <span className="text-xs text-gray-500 flex-shrink-0">
+                                      {formatDate(review.createdAt)}
+                                    </span>
                                   </div>
+
+                                  {/* Comment */}
+                                  <p className="text-gray-700 text-sm leading-relaxed line-clamp-3">
+                                    {review.comment}
+                                  </p>
+
+                                  {/* Additional Photos Count (if more than 1) */}
+                                  {review.photos &&
+                                    review.photos.length > 1 && (
+                                      <div className="mt-2">
+                                        <span className="inline-flex items-center gap-1 text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+                                          <ImageIcon className="h-3 w-3" />
+                                          {review.photos.length} photos
+                                        </span>
+                                      </div>
+                                    )}
                                 </div>
-                                <span className="text-sm text-slate-500">
-                                  {formatDate(review.createdAt)}
-                                </span>
                               </div>
-                              <p className="text-slate-700 mb-3">
-                                {review.comment}
-                              </p>
-                              {review.photos && review.photos.length > 0 && (
-                                <div className="flex gap-2 overflow-x-auto">
-                                  {review.photos.map((photo, index) => (
-                                    <img
-                                      key={index}
-                                      src={`data:image/jpeg;base64,${photo.data}`}
-                                      alt={`Review photo ${index + 1}`}
-                                      className="w-20 h-20 object-cover rounded-lg border border-slate-200 flex-shrink-0"
-                                    />
-                                  ))}
-                                </div>
-                              )}
                             </div>
                           ))}
                         </div>
@@ -1244,32 +1282,36 @@ const AllToilets = () => {
                     </Card>
                   )}
 
-                {/* Metadata */}
-                <Card className="bg-slate-50 border-slate-200">
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-lg flex items-center gap-2">
-                      <Clock className="h-5 w-5 text-slate-600" />
+                {/* Metadata - Single Row */}
+                <Card className="bg-slate-50/70 border-slate-300 p-0">
+                  <CardHeader className="pb-2 px-4 pt-3">
+                    <CardTitle className="text-base flex items-center gap-2">
+                      <Clock className="h-4 w-4 text-slate-600" />
                       Information
                     </CardTitle>
                   </CardHeader>
-                  <CardContent>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                      <div className="p-3 bg-white rounded-lg">
-                        <span className="text-slate-500">Created</span>
-                        <p className="font-medium text-slate-700">
+                  <CardContent className="px-4 pb-3">
+                    <div className="grid grid-cols-3 gap-3 text-sm">
+                      <div className="p-2 bg-white rounded text-center">
+                        <span className="text-slate-500 text block">
+                          Created
+                        </span>
+                        <p className="font-medium text-slate-700 ">
                           {formatDate(selectedToilet.createdAt)}
                         </p>
                       </div>
-                      <div className="p-3 bg-white rounded-lg">
-                        <span className="text-slate-500">Last Updated</span>
-                        <p className="font-medium text-slate-700">
+                      <div className="p-2 bg-white rounded text-center">
+                        <span className="text-slate-500 text block">
+                          Updated
+                        </span>
+                        <p className="font-medium text-slate-700 text">
                           {formatDate(selectedToilet.updatedAt)}
                         </p>
                       </div>
-                      <div className="p-3 bg-white rounded-lg md:col-span-2">
-                        <span className="text-slate-500">Toilet ID</span>
-                        <p className="font-mono text-xs text-slate-600 break-all mt-1">
-                          {selectedToilet._id}
+                      <div className="p-2 bg-white rounded text-center">
+                        <span className="text-slate-500 text block">ID</span>
+                        <p className="font-mono text text-slate-600 truncate">
+                          {selectedToilet._id.slice()}
                         </p>
                       </div>
                     </div>

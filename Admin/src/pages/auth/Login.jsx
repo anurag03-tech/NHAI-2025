@@ -128,7 +128,7 @@ export default function Login() {
                         import.meta.env.VITE_ADMIN_PASSWORD
                       )
                     }
-                    className="flex items-center gap-2 px-4 py-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors shadow-md hover:shadow-lg group-hover:scale-105 transform duration-200"
+                    className="flex items-center gap-2 px-4 py-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors shadow-md hover:shadow-lg group-hover:scale-105 transform duration-200 cursor-pointer"
                   >
                     <span className="text-sm font-medium">Quick Fill</span>
                     <ArrowRight className="h-4 w-4" />
@@ -159,7 +159,7 @@ export default function Login() {
                         import.meta.env.VITE_MODERATOR_PASSWORD
                       )
                     }
-                    className="flex items-center gap-2 px-4 py-2.5 bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 transition-colors shadow-md hover:shadow-lg group-hover:scale-105 transform duration-200"
+                    className="flex items-center gap-2 px-4 py-2.5 bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 transition-colors shadow-md hover:shadow-lg group-hover:scale-105 transform duration-200 cursor-pointer"
                   >
                     <span className="text-sm font-medium">Quick Fill</span>
                     <ArrowRight className="h-4 w-4" />
@@ -264,7 +264,7 @@ export default function Login() {
                 className={`w-full flex justify-center items-center gap-3 py-3.5 px-6 border-2 border-transparent text-base font-semibold rounded-xl text-white transition-all transform ${
                   isLoading
                     ? "bg-gray-400 cursor-not-allowed"
-                    : "bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]"
+                    : "bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
                 }`}
               >
                 {isLoading ? (

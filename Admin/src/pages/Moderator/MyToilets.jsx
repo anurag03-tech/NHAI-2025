@@ -717,69 +717,116 @@ const MyToilets = () => {
                   </Card>
                 </div>
 
-                {/* Reviews Section */}
+                {/* Enhanced Reviews Section - Row Layout */}
                 {selectedToilet.reviews &&
                   selectedToilet.reviews.length > 0 && (
-                    <Card className="bg-yellow-50 border-yellow-200">
-                      <CardHeader className="pb-3">
+                    <Card className="bg-yellow-50/70 border-yellow-200 p-2">
+                      <CardHeader className="py-2 px-4">
                         <CardTitle className="text-lg flex items-center justify-between">
                           <div className="flex items-center gap-2">
                             <Star className="h-5 w-5 text-yellow-600" />
                             Reviews ({selectedToilet.reviews.length})
                           </div>
-                          <div className="flex items-center gap-2 bg-yellow-100 px-3 py-1 rounded-full">
+                          <div className="flex items-center gap-1 bg-yellow-100 px-3 py-1 rounded-full">
                             <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                            <span className="font-semibold text-yellow-700">
+                            <span className="font-semibold text-yellow-700 text-sm">
                               {calculateAverageRating(selectedToilet.reviews)}{" "}
-                              average
+                              avg
                             </span>
                           </div>
                         </CardTitle>
                       </CardHeader>
-                      <CardContent>
-                        <div className="space-y-4 max-h-60 overflow-y-auto">
-                          {selectedToilet.reviews.map((review) => (
+
+                      <CardContent className="px-4 pb-4">
+                        <div className="space-y-4 max-h-80 overflow-y-auto">
+                          {selectedToilet.reviews.map((review, index) => (
                             <div
                               key={review._id}
-                              className="bg-white border border-yellow-200 rounded-lg p-4"
+                              className="bg-white border border-yellow-200 rounded-lg p-4 hover:shadow-md transition-shadow"
                             >
-                              <div className="flex justify-between items-start mb-3">
-                                <div>
-                                  <p className="font-semibold text-slate-700">
-                                    {review.username}
-                                  </p>
-                                  <div className="flex items-center gap-1">
-                                    {[...Array(5)].map((_, i) => (
-                                      <Star
-                                        key={i}
-                                        className={`h-4 w-4 ${
-                                          i < review.rating
-                                            ? "fill-yellow-400 text-yellow-400"
-                                            : "text-slate-300"
-                                        }`}
+                              {/* Row Layout: Photo Left, Content Right */}
+                              <div className="flex gap-4">
+                                {/* Left Side - Photo or Blank */}
+                                <div className="flex-shrink-0 w-32 h-32">
+                                  {review.photos && review.photos.length > 0 ? (
+                                    <div className="relative w-full h-full">
+                                      <img
+                                        src={`data:image/jpeg;base64,${review.photos[0]}`}
+                                        alt={`Review by ${review.username}`}
+                                        className="w-full h-full object-cover rounded-lg border-2 border-gray-200"
+                                        onError={(e) => {
+                                          e.target.style.display = "none";
+                                          e.target.nextElementSibling.style.display =
+                                            "flex";
+                                        }}
                                       />
-                                    ))}
+                                      {/* Fallback for broken image */}
+                                      <div className="hidden w-full h-full bg-gray-100 rounded-lg border-2 border-gray-200 items-center justify-center">
+                                        <Camera className="h-6 w-6 text-gray-400" />
+                                      </div>
+                                      {/* Multiple photos indicator */}
+                                      {review.photos.length > 1 && (
+                                        <div className="absolute -bottom-1 -right-1 bg-yellow-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
+                                          +{review.photos.length - 1}
+                                        </div>
+                                      )}
+                                    </div>
+                                  ) : (
+                                    /* Blank placeholder when no photo */
+                                    <div className="w-full h-full bg-gray-100 rounded-lg border-2 border-gray-200 flex items-center justify-center">
+                                      <div className="text-center">
+                                        <Camera className="h-5 w-5 text-gray-400 mx-auto mb-1" />
+                                        <span className="text-xs text-gray-400">
+                                          No photo
+                                        </span>
+                                      </div>
+                                    </div>
+                                  )}
+                                </div>
+
+                                {/* Right Side - Content */}
+                                <div className="flex-1 min-w-0">
+                                  {/* User and Rating Row */}
+                                  <div className="flex items-center justify-between mb-2">
+                                    <div className="flex items-center gap-2">
+                                      <h4 className="font-semibold text-gray-800 truncate">
+                                        {review.username}
+                                      </h4>
+                                      <div className="flex items-center gap-0.5">
+                                        {[...Array(5)].map((_, i) => (
+                                          <Star
+                                            key={i}
+                                            className={`h-3 w-3 ${
+                                              i < review.rating
+                                                ? "fill-yellow-400 text-yellow-400"
+                                                : "text-gray-300"
+                                            }`}
+                                          />
+                                        ))}
+                                      </div>
+                                    </div>
+                                    <span className="text-xs text-gray-500 flex-shrink-0">
+                                      {formatDate(review.createdAt)}
+                                    </span>
                                   </div>
+
+                                  {/* Comment */}
+                                  <p className="text-gray-700 text-sm leading-relaxed line-clamp-3">
+                                    {review.comment}
+                                  </p>
+
+                                  {/* Additional Photos Count (if more than 1) */}
+                                  {review.photos &&
+                                    review.photos.length > 1 && (
+                                      <div className="mt-2">
+                                        <span className="inline-flex items-center gap-1 text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+                                          <ImageIcon className="h-3 w-3" />
+                                          {review.photos.length} photos
+                                        </span>
+                                      </div>
+                                    )}
                                 </div>
-                                <span className="text-sm text-slate-500">
-                                  {formatDate(review.createdAt)}
-                                </span>
                               </div>
-                              <p className="text-slate-700 mb-3">
-                                {review.comment}
-                              </p>
-                              {review.photos && review.photos.length > 0 && (
-                                <div className="flex gap-2 overflow-x-auto">
-                                  {review.photos.map((photo, index) => (
-                                    <img
-                                      key={index}
-                                      src={`data:image/jpeg;base64,${photo.data}`}
-                                      alt={`Review photo ${index + 1}`}
-                                      className="w-20 h-20 object-cover rounded-lg border border-slate-200 flex-shrink-0"
-                                    />
-                                  ))}
-                                </div>
-                              )}
                             </div>
                           ))}
                         </div>
