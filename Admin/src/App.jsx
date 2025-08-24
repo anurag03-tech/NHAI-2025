@@ -20,6 +20,8 @@ import Moderators from "./pages/NhaiAdmin/Moderators";
 import AdminPenalties from "./pages/NhaiAdmin/AdminPenalties";
 import Analytics from "./pages/NhaiAdmin/Analytics";
 
+import Dashboard from "./pages/Dashboard";
+
 // Create router configuration
 export const router = createBrowserRouter([
   {
@@ -38,7 +40,8 @@ export const router = createBrowserRouter([
         path: "home",
         element: (
           <ProtectedRoutes>
-            <ModeratorHome />
+            <Dashboard />
+            {/* <ModeratorHome /> */}
           </ProtectedRoutes>
         ),
       },
