@@ -199,7 +199,7 @@ export default function LandingPage() {
                 <p className="text-base text-gray-600 leading-relaxed">
                   Complete solution for managing toilet facilities across
                   National Highways. Mobile app for travelers and comprehensive
-                  web dashboard for administrators.
+                  web dashboard for moderators and NHAI admins.
                 </p>
               </div>
 
