@@ -47,8 +47,8 @@ import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
 axios.defaults.withCredentials = true;
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
 
 // Fix Leaflet marker icons
 delete L.Icon.Default.prototype._getIconUrl;
@@ -84,7 +84,11 @@ const AllComplaints = () => {
       setLoading(true);
       console.log("Fetching all complaints...");
 
-      const response = await axios.get(`${BACKEND_URL}/api/complaints`, {});
+      const response = await axios.get(`${BACKEND_URL}/api/complaints`, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
       console.log("API Response:", response.data);
 
