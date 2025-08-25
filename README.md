@@ -28,7 +28,7 @@ NHAI-2025/
 - ⭐ Rate & Review - Share your experience and help improve facilities for everyone
 - ⚠️ Submit Complaints - Report facility issues, cleanliness problems, and maintenance concerns
 
-**Tech Stack:** React Native, Expo, Google Maps API, Real-time location services, Cross-platform compatibility (iOS/Android)
+**Tech Stack:** React Native, Expo, Google Maps API, Real-time location services
 
 ### 2. 🖥️ Operator Web Dashboard (React + Vite)
 
@@ -41,7 +41,7 @@ NHAI-2025/
 - ✅ Status Updates - Maintain real-time facility availability status
 - ⭐ Review Monitoring - Oversee and manage user feedback and ratings
 
-**Tech Stack:** React 18, Vite, Material-UI/Tailwind CSS
+**Tech Stack:** React 18, Vite, Tailwind CSS, shadcn ui
 
 ### 3. 🏛️ Admin Control Panel (React + Vite)
 
@@ -54,7 +54,7 @@ NHAI-2025/
 - 🗨️ Complaint Resolution - Efficient handling of user feedback and issues
 - 🚫 Send Penalties - Issue penalties for operator violations and non-compliance
 
-**Tech Stack:** React 18, Vite, Material-UI/Tailwind CSS
+**Tech Stack:** React 18, Vite, Tailwind CSS, shadcn ui
 
 ### 4. 🔧 Backend API (Node.js + Express)
 
@@ -63,12 +63,12 @@ NHAI-2025/
 **Features:**
 
 - 🔐 JWT Authentication - Secure user authentication and session management
-- 📧 Email Notifications - Automated alerts and communication system
+- 📧 Email Notifications - Communication system
 - 👥 Role-based Access Control - Multi-level user permissions (User/Operator/Admin)
 - 🗄️ MongoDB Integration - Scalable database operations and data management
 - 🔗 RESTful Endpoints - Clean API architecture for all platform interactions
 
-**Tech Stack:** Node.js, Express.js, MongoDB, JWT authentication, Email service integration, RESTful API design
+**Tech Stack:** Node.js, Express.js, MongoDB, JWT authentication, Nodemailer
 
 ## 🚀 Quick Start
 
@@ -87,9 +87,9 @@ Each component requires specific environment variables. Create `.env` files in r
 
 ```env
 VITE_BACKEND_URL=http://localhost:3000
-VITE_ADMIN_EMAIL=admin@nahi.toilets
+VITE_ADMIN_EMAIL=admin@nhai.toilets
 VITE_ADMIN_PASSWORD=Admin@12345
-VITE_OPERATOR_EMAIL=demo-operator@nahi.toilets
+VITE_OPERATOR_EMAIL=demo-operator@nhai.toilets
 VITE_OPERATOR_PASSWORD=Demo@12345
 ```
 
@@ -102,9 +102,9 @@ PORT=3000
 JWT_SECRET=your_jwt_secret_key
 EMAIL=your_email@gmail.com
 EMAIL_PASSWORD=your_google_app_password
-ADMIN_EMAIL=admin@nahi.toilets
+ADMIN_EMAIL=admin@nhai.toilets
 ADMIN_PASSWORD=Admin@12345
-OPERATOR_EMAIL=demo-operator@nahi.toilets
+OPERATOR_EMAIL=demo-operator@nhai.toilets
 OPERATOR_PASSWORD=Demo@12345
 BACKEND_URL=http://localhost:3000
 ```
@@ -146,10 +146,10 @@ npx expo start
 
 ### Admin Login
 
-- Email: `admin@nahi.toilets`
+- Email: `admin@nhai.toilets`
 - Password: `Admin@12345`
 
 ### Operator Login
 
-- Email: `demo-operator@nahi.toilets`
+- Email: `demo-operator@nhai.toilets`
 - Password: `Demo@12345`

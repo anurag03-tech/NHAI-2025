@@ -74,4 +74,4 @@ setInterval(async () => {
   } catch (err) {
     console.error("Frontend keep-alive failed:", err.message);
   }
-}, 1000 * 60 * 16);
+}, 1000 * 60 * 14);
