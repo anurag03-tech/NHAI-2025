@@ -1,6 +1,7 @@
 import { useAuth } from "../contexts/AuthContext";
 import OperatorHome from "./Operator/Home";
 import NhaiAdminHome from "./NhaiAdmin/Home";
+import { Navigate } from "react-router-dom";
 
 export default function Dashboard() {
   const { user } = useAuth();
