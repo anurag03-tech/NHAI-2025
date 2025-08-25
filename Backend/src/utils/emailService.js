@@ -11,9 +11,9 @@ const createTransporter = () => {
   });
 };
 
-const sendModeratorCredentials = async (
-  moderatorEmail,
-  moderatorName,
+const sendOperatorCredentials = async (
+  operatorEmail,
+  operatorName,
   password
 ) => {
   try {
@@ -29,29 +29,29 @@ const sendModeratorCredentials = async (
 
     const mailOptions = {
       from: `"NHAI Admin" <${process.env.EMAIL}>`,
-      to: moderatorEmail,
-      subject: "Your NHAI Moderator Account Credentials",
+      to: operatorEmail,
+      subject: "Your NHAI Operator Account Credentials",
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #ddd; border-radius: 10px; overflow: hidden;">
           <!-- Header -->
           <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center;">
             <h1 style="margin: 0; font-size: 28px;">🏛️ NHAI System</h1>
-            <p style="margin: 10px 0 0 0; font-size: 16px; opacity: 0.9;">Moderator Account Created</p>
+            <p style="margin: 10px 0 0 0; font-size: 16px; opacity: 0.9;">Operator Account Created</p>
           </div>
           
           <!-- Content -->
           <div style="padding: 30px;">
-            <p style="font-size: 18px; color: #333; margin-bottom: 20px;">Dear <strong style="color: #667eea;">${moderatorName}</strong>,</p>
+            <p style="font-size: 18px; color: #333; margin-bottom: 20px;">Dear <strong style="color: #667eea;">${operatorName}</strong>,</p>
             
             <p style="color: #666; line-height: 1.6; margin-bottom: 25px;">
-              Your moderator account has been successfully created! You can now access the NHAI system with the credentials below.
+              Your operator account has been successfully created! You can now access the NHAI system with the credentials below.
             </p>
             
             <!-- Credentials Box -->
             <div style="background: #f8f9ff; border: 2px solid #667eea; border-radius: 8px; padding: 25px; margin: 25px 0;">
               <h3 style="color: #667eea; margin: 0 0 15px 0; font-size: 18px;">🔐 Your Login Credentials</h3>
               <div style="background: white; padding: 15px; border-radius: 5px; margin: 10px 0;">
-                <p style="margin: 5px 0;"><strong>📧 Email:</strong> <code style="background: #e9ecef; padding: 3px 6px; border-radius: 3px; color: #495057;">${moderatorEmail}</code></p>
+                <p style="margin: 5px 0;"><strong>📧 Email:</strong> <code style="background: #e9ecef; padding: 3px 6px; border-radius: 3px; color: #495057;">${operatorEmail}</code></p>
                 <p style="margin: 5px 0;"><strong>🔑 Password:</strong> <code style="background: #fff3cd; padding: 3px 6px; border-radius: 3px; color: #856404; font-weight: bold;">${password}</code></p>
               </div>
             </div>
@@ -76,7 +76,7 @@ const sendModeratorCredentials = async (
       `,
     };
 
-    console.log("📤 Sending email to:", moderatorEmail);
+    console.log("📤 Sending email to:", operatorEmail);
     const result = await transporter.sendMail(mailOptions);
     console.log("✅ Email sent successfully! Message ID:", result.messageId);
 
@@ -93,4 +93,4 @@ const sendModeratorCredentials = async (
   }
 };
 
-module.exports = { sendModeratorCredentials };
+module.exports = { sendOperatorCredentials };

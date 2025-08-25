@@ -281,7 +281,7 @@ const NhaiAdminHome = () => {
     }
   };
 
-  // Enhanced filter toilets - includes moderator name, email, and toilet types search
+  // Enhanced filter toilets - includes operator name, email, and toilet types search
   const filteredToilets = toilets.filter((toilet) => {
     const searchLower = searchTerm.toLowerCase();
     const typesString = getTypesAsString(toilet.type).toLowerCase();
@@ -290,7 +290,7 @@ const NhaiAdminHome = () => {
       toilet.name.toLowerCase().includes(searchLower) ||
       toilet.highway.toLowerCase().includes(searchLower) ||
       toilet.location.address?.toLowerCase().includes(searchLower) ||
-      // Search by moderator name and email
+      // Search by operator name and email
       toilet.createdBy?.name?.toLowerCase().includes(searchLower) ||
       toilet.createdBy?.email?.toLowerCase().includes(searchLower) ||
       // Search by toilet types
@@ -456,7 +456,7 @@ const NhaiAdminHome = () => {
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
             <Input
-              placeholder="Search facilities, types, moderators..."
+              placeholder="Search facilities, types, operators..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-10 h-9 text-sm"

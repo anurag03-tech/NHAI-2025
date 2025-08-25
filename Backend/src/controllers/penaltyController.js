@@ -1,6 +1,6 @@
 const Penalty = require("../models/penaltyModel");
 
-// @desc    Admin issues a penalty to a moderator
+// @desc    Admin issues a penalty to a operator
 // @route   POST /api/penalties
 // @access  Admin
 exports.issuePenalty = async (req, res) => {
@@ -15,16 +15,16 @@ exports.issuePenalty = async (req, res) => {
   }
 };
 
-// @desc    Moderator pays a penalty
+// @desc    Operator pays a penalty
 // @route   PUT /api/penalties/:id/pay
-// @access  Moderator
+// @access  Operator
 exports.payPenalty = async (req, res) => {
   try {
     const penalty = await Penalty.findById(req.params.id);
     if (!penalty) return res.status(404).json({ message: "Penalty not found" });
 
-    // Ensure moderator is the one paying their own penalty
-    if (penalty.moderator.toString() !== req.user._id.toString()) {
+    // Ensure operator is the one paying their own penalty
+    if (penalty.operator.toString() !== req.user._id.toString()) {
       return res
         .status(403)
         .json({ message: "You are not authorized to pay this penalty" });
@@ -46,7 +46,7 @@ exports.payPenalty = async (req, res) => {
 exports.getAllPenalties = async (req, res) => {
   try {
     const penalties = await Penalty.find()
-      .populate("moderator", "name email")
+      .populate("operator", "name email")
       .populate("issuedBy", "name email");
     res.json(penalties);
   } catch (err) {
@@ -54,12 +54,12 @@ exports.getAllPenalties = async (req, res) => {
   }
 };
 
-// @desc    Get penalties for logged-in moderator
+// @desc    Get penalties for logged-in operator
 // @route   GET /api/penalties/my
-// @access  Moderator
+// @access  Operator
 exports.getMyPenalties = async (req, res) => {
   try {
-    const penalties = await Penalty.find({ moderator: req.user._id }).populate(
+    const penalties = await Penalty.find({ operator: req.user._id }).populate(
       "issuedBy",
       "name email"
     );
@@ -69,14 +69,14 @@ exports.getMyPenalties = async (req, res) => {
   }
 };
 
-// @desc    Admin fetch penalties for a specific moderator
-// @route   GET /api/penalties/moderator/:moderatorId
+// @desc    Admin fetch penalties for a specific operator
+// @route   GET /api/penalties/operator/:operatorId
 // @access  Admin
-exports.getPenaltiesByModerator = async (req, res) => {
+exports.getPenaltiesByOperator = async (req, res) => {
   try {
-    const { moderatorId } = req.params;
-    const penalties = await Penalty.find({ moderator: moderatorId })
-      .populate("moderator", "name email")
+    const { operatorId } = req.params;
+    const penalties = await Penalty.find({ operator: operatorId })
+      .populate("operator", "name email")
       .populate("issuedBy", "name email");
     res.json(penalties);
   } catch (err) {

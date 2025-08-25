@@ -27,7 +27,7 @@ exports.addComplaint = async (req, res) => {
   }
 };
 
-// @desc    Get all complaints (Admin/Moderator)
+// @desc    Get all complaints (Admin/Operator)
 // @route   GET /api/complaints
 exports.getComplaints = async (req, res) => {
   try {
@@ -50,20 +50,20 @@ exports.getComplaintsByUsername = async (req, res) => {
   }
 };
 
-// @desc    Get complaints by Moderator (all toilets they created)
-// @route   GET /api/complaints/moderator/:moderatorId
-// @access  Admin/Moderator
-exports.getComplaintsByModerator = async (req, res) => {
+// @desc    Get complaints by Operator (all toilets they created)
+// @route   GET /api/complaints/operator/:operatorId
+// @access  Admin/Operator
+exports.getComplaintsByOperator = async (req, res) => {
   try {
-    const { moderatorId } = req.params;
+    const { operatorId } = req.params;
 
-    // Find toilets created by this moderator
-    const toilets = await Toilet.find({ createdBy: moderatorId }).select("_id");
+    // Find toilets created by this operator
+    const toilets = await Toilet.find({ createdBy: operatorId }).select("_id");
 
     if (!toilets.length) {
       return res
         .status(404)
-        .json({ message: "No toilets found for this moderator" });
+        .json({ message: "No toilets found for this operator" });
     }
 
     // Get complaints linked to those toilets
@@ -77,15 +77,15 @@ exports.getComplaintsByModerator = async (req, res) => {
   }
 };
 
-// 🆕 @desc    Get complaints for current moderator's toilets
+// 🆕 @desc    Get complaints for current operator's toilets
 // @route   GET /api/complaints/my
-// @access  Moderator
+// @access  Operator
 exports.getMyComplaints = async (req, res) => {
   try {
-    const moderatorId = req.user._id;
+    const operatorId = req.user._id;
 
-    // Find toilets created by this moderator
-    const toilets = await Toilet.find({ createdBy: moderatorId }).select("_id");
+    // Find toilets created by this operator
+    const toilets = await Toilet.find({ createdBy: operatorId }).select("_id");
 
     if (!toilets.length) {
       return res.json([]); // Return empty array instead of error
@@ -106,7 +106,7 @@ exports.getMyComplaints = async (req, res) => {
 
 // 🆕 @desc    Update complaint status
 // @route   PATCH /api/complaints/:id/status
-// @access  Moderator/Admin
+// @access  Operator/Admin
 exports.updateComplaintStatus = async (req, res) => {
   try {
     const { id } = req.params;
@@ -121,8 +121,8 @@ exports.updateComplaintStatus = async (req, res) => {
       return res.status(404).json({ message: "Complaint not found" });
     }
 
-    // Check if moderator owns the toilet (only for moderators)
-    if (userRole === "Moderator") {
+    // Check if operator owns the toilet (only for operators)
+    if (userRole === "Operator") {
       if (complaint.toilet.createdBy.toString() !== userId.toString()) {
         return res.status(403).json({
           message: "You can only update complaints for your own toilets",
@@ -160,7 +160,7 @@ exports.updateComplaintStatus = async (req, res) => {
 
 // 🆕 @desc    Get single complaint details
 // @route   GET /api/complaints/:id
-// @access  Moderator/Admin
+// @access  Operator/Admin
 exports.getComplaintById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -173,8 +173,8 @@ exports.getComplaintById = async (req, res) => {
       return res.status(404).json({ message: "Complaint not found" });
     }
 
-    // Check if moderator owns the toilet (only for moderators)
-    if (userRole === "Moderator") {
+    // Check if operator owns the toilet (only for operators)
+    if (userRole === "Operator") {
       if (complaint.toilet.createdBy.toString() !== userId.toString()) {
         return res.status(403).json({
           message: "You can only view complaints for your own toilets",

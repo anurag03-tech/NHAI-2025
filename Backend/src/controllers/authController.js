@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
 const User = require("../models/userModel");
-const { sendModeratorCredentials } = require("../utils/emailService");
+const { sendOperatorCredentials } = require("../utils/emailService");
 
 // Generate JWT
 const generateToken = (id) => {
@@ -55,7 +55,7 @@ exports.logout = (req, res) => {
 };
 
 // Rest of your functions remain the same...
-exports.createModerator = async (req, res) => {
+exports.createOperator = async (req, res) => {
   const { name, email } = req.body;
 
   try {
@@ -68,26 +68,25 @@ exports.createModerator = async (req, res) => {
 
     const randomPass = crypto.randomBytes(6).toString("hex");
 
-    const moderator = await User.create({
+    const operator = await User.create({
       name,
       email,
       password: randomPass,
-      role: "Moderator",
+      role: "Operator",
     });
 
-    const emailResult = await sendModeratorCredentials(email, name, randomPass);
+    const emailResult = await sendOperatorCredentials(email, name, randomPass);
 
     if (emailResult.success) {
       console.log(`✅ Credentials emailed to: ${email}`);
 
       res.status(201).json({
-        message:
-          "Moderator created successfully and credentials sent via email",
-        moderator: {
-          id: moderator._id,
-          name: moderator.name,
-          email: moderator.email,
-          role: moderator.role,
+        message: "Operator created successfully and credentials sent via email",
+        operator: {
+          id: operator._id,
+          name: operator.name,
+          email: operator.email,
+          role: operator.role,
         },
         emailSent: true,
       });
@@ -95,12 +94,12 @@ exports.createModerator = async (req, res) => {
       console.log(`❌ Email failed for: ${email}. Password: ${randomPass}`);
 
       res.status(201).json({
-        message: "Moderator created but email failed to send",
-        moderator: {
-          id: moderator._id,
-          name: moderator.name,
-          email: moderator.email,
-          role: moderator.role,
+        message: "Operator created but email failed to send",
+        operator: {
+          id: operator._id,
+          name: operator.name,
+          email: operator.email,
+          role: operator.role,
         },
         tempPassword: randomPass,
         emailSent: false,
@@ -127,15 +126,13 @@ exports.getCurrentUser = async (req, res) => {
   }
 };
 
-exports.getAllModerators = async (req, res) => {
+exports.getAllOperators = async (req, res) => {
   try {
-    const moderators = await User.find({ role: "Moderator" }).select(
-      "-password"
-    );
+    const operators = await User.find({ role: "Operator" }).select("-password");
 
     res.status(200).json({
-      count: moderators.length,
-      moderators,
+      count: operators.length,
+      operators,
     });
   } catch (err) {
     res.status(500).json({ message: err.message });

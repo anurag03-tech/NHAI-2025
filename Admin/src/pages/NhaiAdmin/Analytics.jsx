@@ -32,9 +32,9 @@ const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
 const Analytics = () => {
   const [loading, setLoading] = useState(true);
   const [dateRange, setDateRange] = useState("last30days");
-  const [moderators, setModerators] = useState([]);
+  const [operators, setOperators] = useState([]);
   const [analyticsData, setAnalyticsData] = useState({
-    moderatorPerformance: [],
+    operatorPerformance: [],
     monthlyTrends: [],
   });
 
@@ -46,25 +46,25 @@ const Analytics = () => {
     try {
       setLoading(true);
 
-      const [toiletsRes, moderatorsRes, complaintsRes] = await Promise.all([
+      const [toiletsRes, operatorsRes, complaintsRes] = await Promise.all([
         axios.get(`${BACKEND_URL}/api/toilets`).catch(() => ({ data: [] })),
         axios
-          .get(`${BACKEND_URL}/api/auth/moderators`)
-          .catch(() => ({ data: { moderators: [] } })),
+          .get(`${BACKEND_URL}/api/auth/operators`)
+          .catch(() => ({ data: { operators: [] } })),
         axios.get(`${BACKEND_URL}/api/complaints`).catch(() => ({ data: [] })),
       ]);
 
       const toilets = Array.isArray(toiletsRes.data) ? toiletsRes.data : [];
-      const moderatorsData = moderatorsRes.data.moderators || [];
+      const operatorsData = operatorsRes.data.operators || [];
       const complaints = Array.isArray(complaintsRes.data)
         ? complaintsRes.data
         : [];
 
-      setModerators(moderatorsData);
+      setOperators(operatorsData);
 
       const analytics = processAnalyticsData(
         toilets,
-        moderatorsData,
+        operatorsData,
         complaints
       );
       setAnalyticsData(analytics);
@@ -78,30 +78,30 @@ const Analytics = () => {
     }
   };
 
-  const processAnalyticsData = (toilets, moderators, complaints) => {
-    // Calculate moderator performance metrics
-    const moderatorPerformance = moderators.map((moderator) => {
-      const moderatorToilets = toilets.filter(
-        (t) => t.createdBy?._id === moderator._id
+  const processAnalyticsData = (toilets, operators, complaints) => {
+    // Calculate operator performance metrics
+    const operatorPerformance = operators.map((operator) => {
+      const operatorToilets = toilets.filter(
+        (t) => t.createdBy?._id === operator._id
       );
 
-      const moderatorToiletIds = new Set(moderatorToilets.map((t) => t._id));
+      const operatorToiletIds = new Set(operatorToilets.map((t) => t._id));
 
-      const moderatorComplaints = complaints.filter((complaint) => {
+      const operatorComplaints = complaints.filter((complaint) => {
         if (!complaint.toilet || complaint.toilet === null) {
           return false;
         }
         const toiletId = complaint.toilet._id;
-        return toiletId && moderatorToiletIds.has(toiletId);
+        return toiletId && operatorToiletIds.has(toiletId);
       });
 
-      const allReviews = moderatorToilets.flatMap((t) => t.reviews || []);
+      const allReviews = operatorToilets.flatMap((t) => t.reviews || []);
 
       return {
-        name: moderator.name,
-        email: moderator.email,
-        id: moderator._id,
-        toiletsManaged: moderatorToilets.length,
+        name: operator.name,
+        email: operator.email,
+        id: operator._id,
+        toiletsManaged: operatorToilets.length,
         averageRating:
           allReviews.length > 0
             ? (
@@ -110,13 +110,13 @@ const Analytics = () => {
               ).toFixed(1)
             : 0,
         totalReviews: allReviews.length,
-        complaintsReceived: moderatorComplaints.length,
-        operationalToilets: moderatorToilets.filter((t) => t.status === "Open")
+        complaintsReceived: operatorComplaints.length,
+        operationalToilets: operatorToilets.filter((t) => t.status === "Open")
           .length,
         performanceScore: calculatePerformanceScore(
-          moderatorToilets,
+          operatorToilets,
           allReviews,
-          moderatorComplaints
+          operatorComplaints
         ),
       };
     });
@@ -125,7 +125,7 @@ const Analytics = () => {
     const monthlyTrends = processMonthlyTrends(toilets, complaints);
 
     return {
-      moderatorPerformance,
+      operatorPerformance,
       monthlyTrends,
     };
   };
@@ -240,16 +240,16 @@ const Analytics = () => {
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
           <div>
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              Moderator Performance Analytics
+              Operator Performance Analytics
             </h1>
             <p className="text-gray-600">
-              Track reviews and complaints received by moderators
+              Track reviews and complaints received by operators
             </p>
           </div>
         </div>
         {/* Key Metrics Cards - Enhanced Design */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-4">
-          {/* Active Moderators */}
+          {/* Active Operators */}
           <div className="bg-white/90 backdrop-blur-sm rounded-xl p-4 border border-gray-300 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 cursor-pointer">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
@@ -258,10 +258,10 @@ const Analytics = () => {
                 </div>
                 <div>
                   <p className="text-sm font-medium text-gray-600">
-                    Active Moderators
+                    Active Operators
                   </p>
                   <p className="text-2xl md:text-3xl font-bold text-gray-900">
-                    {moderators.length}
+                    {operators.length}
                   </p>
                 </div>
               </div>
@@ -306,7 +306,7 @@ const Analytics = () => {
             </div>
           </div>
         </div>
-        {/* Charts Row - Reviews & Complaints + Moderator Performance */}
+        {/* Charts Row - Reviews & Complaints + Operator Performance */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 mb-4">
           {/* Combined Reviews and Complaints Chart */}
           <Card>
@@ -357,18 +357,18 @@ const Analytics = () => {
             </CardContent>
           </Card>
 
-          {/* Moderator Performance Chart */}
+          {/* Operator Performance Chart */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <TrendingUp className="h-5 w-5 text-green-600" />
-                Moderator Performance Overview
+                Operator Performance Overview
               </CardTitle>
             </CardHeader>
             <CardContent>
-              {analyticsData.moderatorPerformance.length > 0 ? (
+              {analyticsData.operatorPerformance.length > 0 ? (
                 <ResponsiveContainer width="100%" height={300}>
-                  <ComposedChart data={analyticsData.moderatorPerformance}>
+                  <ComposedChart data={analyticsData.operatorPerformance}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="name" />
                     <YAxis />
@@ -386,7 +386,7 @@ const Analytics = () => {
                 <div className="flex items-center justify-center h-[300px] text-gray-500">
                   <div className="text-center">
                     <Users className="h-12 w-12 text-gray-300 mx-auto mb-3" />
-                    <p>No moderator performance data available</p>
+                    <p>No operator performance data available</p>
                   </div>
                 </div>
               )}
@@ -394,21 +394,21 @@ const Analytics = () => {
           </Card>
         </div>
 
-        {/* Moderator Performance Table */}
+        {/* Operator Performance Table */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-xl">
               <FileText className="h-5 w-5 text-purple-600" />
-              Detailed Moderator Performance
+              Detailed Operator Performance
             </CardTitle>
           </CardHeader>
           <CardContent>
-            {analyticsData.moderatorPerformance.length > 0 ? (
+            {analyticsData.operatorPerformance.length > 0 ? (
               <div className="overflow-x-auto">
                 <table className="w-full text">
                   <thead>
                     <tr className="border-b">
-                      <th className="text-left p-3">Moderator</th>
+                      <th className="text-left p-3">Operator</th>
                       <th className="text-left p-3">Facilities</th>
                       <th className="text-left p-3">Avg Rating</th>
                       <th className="text-left p-3">Reviews</th>
@@ -416,47 +416,47 @@ const Analytics = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {analyticsData.moderatorPerformance
+                    {analyticsData.operatorPerformance
                       .sort((a, b) => b.performanceScore - a.performanceScore)
-                      .map((moderator) => (
+                      .map((operator) => (
                         <tr
-                          key={moderator.id}
+                          key={operator.id}
                           className="border-b hover:bg-gray-50"
                         >
                           <td className="p-3">
                             <div>
                               <p className="font-medium text-gray-900">
-                                {moderator.name}
+                                {operator.name}
                               </p>
                               <p className="text-gray-600 text-xs">
-                                {moderator.email}
+                                {operator.email}
                               </p>
                             </div>
                           </td>
                           <td className="p-3">
                             <div className="flex items-center gap-2">
                               <span className="font-medium">
-                                {moderator.toiletsManaged}
+                                {operator.toiletsManaged}
                               </span>
                               <span className="text-green-600 text">
-                                ({moderator.operationalToilets} open)
+                                ({operator.operationalToilets} open)
                               </span>
                             </div>
                           </td>
                           <td className="p-3">
                             <div className="flex items-center gap-1">
                               <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                              <span>{moderator.averageRating}</span>
+                              <span>{operator.averageRating}</span>
                             </div>
                           </td>
                           <td className="p-3">
                             <span className="text-green-600 font-medium">
-                              {moderator.totalReviews}
+                              {operator.totalReviews}
                             </span>
                           </td>
                           <td className="p-3">
                             <span className="text-red-600 font-medium">
-                              {moderator.complaintsReceived}
+                              {operator.complaintsReceived}
                             </span>
                           </td>
                         </tr>
@@ -468,7 +468,7 @@ const Analytics = () => {
               <div className="flex items-center justify-center py-12 text-gray-500">
                 <div className="text-center">
                   <Users className="h-12 w-12 text-gray-300 mx-auto mb-3" />
-                  <p>No moderator performance data available</p>
+                  <p>No operator performance data available</p>
                 </div>
               </div>
             )}

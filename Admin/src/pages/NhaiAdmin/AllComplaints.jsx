@@ -146,7 +146,7 @@ const AllComplaints = () => {
 
   const sendPenalty = async (complaint) => {
     if (!complaint.toilet?.createdBy) {
-      toast.error("No moderator information available for this complaint");
+      toast.error("No operator information available for this complaint");
       return;
     }
 
@@ -166,7 +166,7 @@ const AllComplaints = () => {
       setSendingPenalty(true);
 
       const penaltyData = {
-        moderator: complaint.toilet.createdBy,
+        operator: complaint.toilet.createdBy,
         reason: form.reason.trim(),
         amount: parseInt(form.amount),
       };
@@ -558,7 +558,7 @@ const AllComplaints = () => {
                           </p>
                         </div>
 
-                        {/* Moderator Info */}
+                        {/* Operator Info */}
                         {complaint.toilet?.createdBy && (
                           <div className="p-3 bg-indigo-50 rounded-lg border border-indigo-200">
                             <div className="flex items-center gap-2 mb-2">
@@ -569,7 +569,7 @@ const AllComplaints = () => {
                             </div>
                             <div className="space-y-2">
                               <p className="text-sm font-semibold text-slate-700">
-                                Moderator Name
+                                Operator Name
                               </p>
                               <p className="text-xs text-slate-600">
                                 ID: {complaint.toilet.createdBy}
@@ -579,7 +579,7 @@ const AllComplaints = () => {
                                 className="text-xs bg-indigo-50 text-indigo-700 border-indigo-200"
                               >
                                 <Building className="h-2 w-2 mr-1" />
-                                Moderator
+                                Operator
                               </Badge>
                             </div>
                           </div>
@@ -637,14 +637,14 @@ const AllComplaints = () => {
                                   <p className="text-sm text-green-700">
                                     Penalty of ₹
                                     {penaltyForms[complaint._id]?.amount} has
-                                    been sent to the moderator
+                                    been sent to the operator
                                   </p>
                                 </div>
                               ) : (
                                 <div>
                                   <DropdownMenuLabel className="flex items-center gap-2 text-red-800">
                                     <AlertTriangle className="h-4 w-4" />
-                                    Send Penalty to Moderator
+                                    Send Penalty to Operator
                                   </DropdownMenuLabel>
                                   <DropdownMenuSeparator className="bg-red-200" />
 

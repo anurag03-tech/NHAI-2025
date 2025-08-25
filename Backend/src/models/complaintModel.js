@@ -23,7 +23,7 @@ const ComplaintSchema = new mongoose.Schema(
       enum: ["Pending", "In Progress", "Resolved", "Rejected"],
       default: "Pending",
     },
-    response: { type: String }, // Admin/Moderator response
+    response: { type: String }, // Admin/Operator response
   },
   { timestamps: true }
 );

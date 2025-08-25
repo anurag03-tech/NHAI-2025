@@ -2,9 +2,9 @@ const mongoose = require("mongoose");
 
 const PenaltySchema = new mongoose.Schema(
   {
-    moderator: {
+    operator: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User", // must be Moderator role
+      ref: "User", // must be Operator role
       required: true,
     },
     issuedBy: {

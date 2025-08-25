@@ -58,9 +58,9 @@ export default function LandingPage() {
     {
       id: 3,
       image: "/mode-dash.png",
-      title: "NHAI Toilets Moderator Dashboard",
+      title: "NHAI Toilets Operator Dashboard",
       subtitle: "Facility Management & Updates",
-      tag: "For Moderators",
+      tag: "For Operators",
       type: "web",
 
       color: "from-purple-500 to-pink-600",
@@ -109,7 +109,7 @@ export default function LandingPage() {
     {
       icon: BarChart3,
       title: "Analytics & Reports",
-      desc: "Comprehensive Moderator statistics and performance metrics",
+      desc: "Comprehensive Operator statistics and performance metrics",
     },
     {
       icon: MessageCircle,
@@ -119,11 +119,11 @@ export default function LandingPage() {
     {
       icon: Shield,
       title: "Send Penalties",
-      desc: "Issue penalties for Moderator violations and non-compliance",
+      desc: "Issue penalties for Operator violations and non-compliance",
     },
   ];
 
-  const moderatorFeatures = [
+  const operatorFeatures = [
     {
       icon: Shield,
       title: "Facility Management",
@@ -200,7 +200,7 @@ export default function LandingPage() {
                 <p className="text-lg  text-gray-700 leading-relaxed">
                   Complete solution for managing toilet facilities across
                   National Highways. Mobile app for travelers and comprehensive
-                  web dashboard for moderators and NHAI admins.
+                  web dashboard for operators and NHAI admins.
                 </p>
               </div>
 
@@ -390,7 +390,7 @@ export default function LandingPage() {
               </div>
             </div>
 
-            {/* Moderators Column */}
+            {/* Operators Column */}
             <div className="flex-1 bg-gradient-to-br from-purple-100 to-pink-100 rounded-2xl p-6 border border-purple-200">
               <div className="flex items-center gap-3 mb-6">
                 <div className="p-3 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full">
@@ -398,14 +398,14 @@ export default function LandingPage() {
                 </div>
                 <div>
                   <h3 className="text-2xl font-bold text-gray-900">
-                    For Moderators
+                    For Operators
                   </h3>
                   <p className="text-purple-600 font-medium">Webapp Features</p>
                 </div>
               </div>
 
               <div className="space-y-2">
-                {moderatorFeatures.map((feature, index) => (
+                {operatorFeatures.map((feature, index) => (
                   <div
                     key={index}
                     className="bg-white/80 backdrop-blur-sm rounded-lg p-3 shadow-sm hover:shadow-md transition-all duration-300 border border-white/50 group"

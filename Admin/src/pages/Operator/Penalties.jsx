@@ -112,7 +112,7 @@ const Penalties = () => {
       const { data } = await axios.put(
         `${BACKEND_URL}/api/penalties/${selectedPenalty._id}/pay`,
         {
-          moderator: selectedPenalty.moderator,
+          operator: selectedPenalty.operator,
           reason: selectedPenalty.reason,
           amount: selectedPenalty.amount,
         },

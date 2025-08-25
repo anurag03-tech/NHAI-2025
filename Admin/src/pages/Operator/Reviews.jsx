@@ -119,7 +119,7 @@ const Reviews = () => {
     return (
       review.photos &&
       review.photos.length > 0 &&
-      review.uploadedBy !== "moderator"
+      review.uploadedBy !== "operator"
     );
   };
 

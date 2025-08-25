@@ -1,12 +1,12 @@
 import { useAuth } from "../contexts/AuthContext";
-import ModeratorHome from "./Moderator/Home";
+import OperatorHome from "./Operator/Home";
 import NhaiAdminHome from "./NhaiAdmin/Home";
 
 export default function Dashboard() {
   const { user } = useAuth();
 
-  if (user.role === "Moderator") {
-    return <ModeratorHome />;
+  if (user.role === "Operator") {
+    return <OperatorHome />;
   } else if (user.role === "Admin") {
     return <NhaiAdminHome />;
   }

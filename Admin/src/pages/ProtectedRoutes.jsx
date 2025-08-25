@@ -1,6 +1,6 @@
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
-import ModeratorHome from "./Moderator/Home";
+import OperatorHome from "./Operator/Home";
 import NhaiAdminHome from "./NhaiAdmin/Home";
 
 export default function ProtectedRoutes({ children, requiredRole }) {

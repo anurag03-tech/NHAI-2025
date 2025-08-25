@@ -136,15 +136,15 @@ const AdminPenalties = () => {
     }
   };
 
-  // Fixed search function - includes both name and email for moderator and issuedBy
+  // Fixed search function - includes both name and email for operator and issuedBy
   const filteredPenalties = penalties.filter((penalty) => {
     if (!searchTerm) return true;
 
     const searchLower = searchTerm.toLowerCase();
     const matchesSearch =
-      // Moderator search - name and email
-      penalty.moderator?.name?.toLowerCase().includes(searchLower) ||
-      penalty.moderator?.email?.toLowerCase().includes(searchLower) ||
+      // Operator search - name and email
+      penalty.operator?.name?.toLowerCase().includes(searchLower) ||
+      penalty.operator?.email?.toLowerCase().includes(searchLower) ||
       // IssuedBy search - name and email
       penalty.issuedBy?.name?.toLowerCase().includes(searchLower) ||
       penalty.issuedBy?.email?.toLowerCase().includes(searchLower) ||
@@ -202,7 +202,7 @@ const AdminPenalties = () => {
         <div className="space-y-1 mb-4">
           <h1 className="text-3xl font-bold text-blue-500">All Penalties</h1>
           <p className="text-blue-500 text font-medium">
-            View and manage all issued penalties to moderators
+            View and manage all issued penalties to operators
           </p>
         </div>
 
@@ -250,7 +250,7 @@ const AdminPenalties = () => {
           <div className="flex-1 relative w-full">
             <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-blue-500 h-5 w-5" />
             <Input
-              placeholder="Search by moderator, issued by, or reason..."
+              placeholder="Search by operator, issued by, or reason..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-12 h-10 border border-blue-500 bg-white rounded-2xl placeholder:text-gray-400 shadow-sm"
@@ -341,20 +341,20 @@ const AdminPenalties = () => {
                       </div>
                     </div>
 
-                    {/* Moderator Info - Reduced Width */}
+                    {/* Operator Info - Reduced Width */}
                     <div className="lg:col-span-2">
                       <div className="p-2 bg-blue-50 rounded-lg border border-blue-200 h-20 flex flex-col justify-center">
                         <div className="flex items-center gap-1 mb-1">
                           <User className="h-3 w-3 text-blue-600" />
                           <span className="text-xs font-medium text-blue-700">
-                            Moderator
+                            Operator
                           </span>
                         </div>
                         <p className="text-sm font-semibold text-slate-700 truncate">
-                          {penalty.moderator?.name}
+                          {penalty.operator?.name}
                         </p>
                         <p className="text-xs text-slate-600 truncate">
-                          {penalty.moderator?.email}
+                          {penalty.operator?.email}
                         </p>
                       </div>
                     </div>

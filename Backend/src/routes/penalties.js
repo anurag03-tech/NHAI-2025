@@ -5,28 +5,28 @@ const {
   payPenalty,
   getAllPenalties,
   getMyPenalties,
-  getPenaltiesByModerator,
+  getPenaltiesByOperator,
 } = require("../controllers/penaltyController");
 const { protect, authorize } = require("../middlewares/auth");
 
 // Admin: issue penalty
 router.post("/", protect, authorize("Admin"), issuePenalty);
 
-// Moderator: pay penalty
-router.put("/:id/pay", protect, authorize("Moderator"), payPenalty);
+// Operator: pay penalty
+router.put("/:id/pay", protect, authorize("Operator"), payPenalty);
 
 // Admin: get all penalties
 router.get("/", protect, authorize("Admin"), getAllPenalties);
 
-// Moderator: get own penalties
-router.get("/my", protect, authorize("Moderator"), getMyPenalties);
+// Operator: get own penalties
+router.get("/my", protect, authorize("Operator"), getMyPenalties);
 
-// Admin: get penalties of specific moderator
+// Admin: get penalties of specific operator
 router.get(
-  "/moderator/:moderatorId",
+  "/operator/:operatorId",
   protect,
   authorize("Admin"),
-  getPenaltiesByModerator
+  getPenaltiesByOperator
 );
 
 module.exports = router;

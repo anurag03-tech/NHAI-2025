@@ -174,7 +174,7 @@ const AllToilets = () => {
       setSendingPenalty(true);
 
       const penaltyData = {
-        moderator: toilet.createdBy._id,
+        operator: toilet.createdBy._id,
         reason: form.reason.trim(),
         amount: parseInt(form.amount),
       };
@@ -250,7 +250,7 @@ const AllToilets = () => {
         toast.success(
           `Found ${response.data.length} toilet${
             response.data.length !== 1 ? "s" : ""
-          } from all moderators`
+          } from all operators`
         );
       } else {
         console.warn("Unexpected response format:", response.data);
@@ -331,7 +331,7 @@ const AllToilets = () => {
         return "bg-orange-100";
       case "Reviews":
         return "bg-purple-100";
-      case "Moderators":
+      case "Operators":
         return "bg-indigo-100";
       default:
         return "bg-gray-100";
@@ -416,8 +416,8 @@ const AllToilets = () => {
       0
     );
 
-    // Get unique moderators
-    const uniqueModerators = new Set(
+    // Get unique operators
+    const uniqueOperators = new Set(
       toilets.map((t) => t.createdBy?._id).filter(Boolean)
     ).size;
 
@@ -426,7 +426,7 @@ const AllToilets = () => {
       Open: open,
       Closed: closed,
       "Under Maintenance": maintenance,
-      Moderators: uniqueModerators,
+      Operators: uniqueOperators,
     };
   };
 
@@ -439,7 +439,7 @@ const AllToilets = () => {
           <div className="space-y-1 p-1 py-0">
             <h1 className="text-3xl font-bold text-blue-500">All Toilets</h1>
             <p className="text-blue-500 text font-medium">
-              View and manage all toilets from all moderators
+              View and manage all toilets from all operators
             </p>
           </div>
         </div>
@@ -482,7 +482,7 @@ const AllToilets = () => {
                     {status === "Reviews" && (
                       <MessageCircle className="h-4 w-4" />
                     )}
-                    {status === "Moderators" && (
+                    {status === "Operators" && (
                       <UserCheck className="h-4 w-4" />
                     )}
                     {["Open", "Closed", "Under Maintenance"].includes(status) &&
@@ -508,7 +508,7 @@ const AllToilets = () => {
           <div className="flex-1 relative w-full">
             <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-blue-500 h-5 w-5" />
             <Input
-              placeholder="Search by name, highway, address, moderator, or toilet type..."
+              placeholder="Search by name, highway, address, operator, or toilet type..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-12 h-10 border border-blue-500 bg-white rounded-2xl placeholder:text-gray-400 shadow-sm"
@@ -725,7 +725,7 @@ const AllToilets = () => {
                           </div>
                         </div>
 
-                        {/* Moderator Details */}
+                        {/* Operator Details */}
                         <div className="space-y-2">
                           <div className="p-3 bg-indigo-50 rounded-lg border border-indigo-200">
                             <div className="flex items-center gap-2 mb-2">
@@ -757,7 +757,7 @@ const AllToilets = () => {
                               </div>
                             ) : (
                               <p className="text-xs text-slate-500">
-                                Unknown moderator
+                                Unknown operator
                               </p>
                             )}
                           </div>
@@ -1110,7 +1110,7 @@ const AllToilets = () => {
                       </CardContent>
                     </Card>
 
-                    {/* Moderator Details - Compact */}
+                    {/* Operator Details - Compact */}
                     <Card className="bg-indigo-50/70 border-indigo-200 p-2">
                       <CardHeader className=" py-0">
                         <CardTitle className="text-base flex items-center ">

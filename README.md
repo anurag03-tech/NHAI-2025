@@ -1,17 +1,17 @@
 # NHAI Toilets Management System
 
-A complete solution for managing toilet facilities across India’s National Highways, featuring a mobile app for travelers and a comprehensive web dashboard for moderators and NHAI administrators.
+A complete solution for managing toilet facilities across India’s National Highways, featuring a mobile app for travelers and a comprehensive web dashboard for operators and NHAI administrators.
 
 ## 🚀 Get Started
 
 - 📱 **Mobile App for Users (Highway Travelers):** [Download Android APK](https://drive.google.com/file/d/1gwN6LDuOGszCzBJ49tpcCIHqDoa_PC9O/view?usp=sharing)
-- 🔧 **Webapp for Moderators & NHAI Administrators:** [nhai-toilets-webapp.onrender.com](https://nhai-toilets-webapp.onrender.com)
+- 🔧 **Webapp for Operators & NHAI Administrators:** [nhai-toilets-webapp.onrender.com](https://nhai-toilets-webapp.onrender.com)
 
 ## 🏗️ System Architecture
 
 ```
 NHAI-2025/
-├── Admin/          # React Admin Panel (For NHAI Admin + Moderator)
+├── Admin/          # React Admin Panel (For NHAI Admin + Operator)
 ├── Backend/        # Node.js Express API Server (Common)
 ├── Mobile App/     # React Native Mobile App (For Users)
 └── README.md       # This file
@@ -30,9 +30,9 @@ NHAI-2025/
 
 **Tech Stack:** React Native, Expo, Google Maps API, Real-time location services, Cross-platform compatibility (iOS/Android)
 
-### 2. 🖥️ Moderator Web Dashboard (React + Vite)
+### 2. 🖥️ Operator Web Dashboard (React + Vite)
 
-**For Moderators - Facility management and user support interface**
+**For Operators - Facility management and user support interface**
 
 **Features:**
 
@@ -50,9 +50,9 @@ NHAI-2025/
 **Features:**
 
 - 📊 Dashboard Control - Centralized management of all highway facilities
-- 📈 Analytics & Reports - Comprehensive moderator statistics and performance metrics
+- 📈 Analytics & Reports - Comprehensive operator statistics and performance metrics
 - 🗨️ Complaint Resolution - Efficient handling of user feedback and issues
-- 🚫 Send Penalties - Issue penalties for moderator violations and non-compliance
+- 🚫 Send Penalties - Issue penalties for operator violations and non-compliance
 
 **Tech Stack:** React 18, Vite, Material-UI/Tailwind CSS
 
@@ -64,7 +64,7 @@ NHAI-2025/
 
 - 🔐 JWT Authentication - Secure user authentication and session management
 - 📧 Email Notifications - Automated alerts and communication system
-- 👥 Role-based Access Control - Multi-level user permissions (User/Moderator/Admin)
+- 👥 Role-based Access Control - Multi-level user permissions (User/Operator/Admin)
 - 🗄️ MongoDB Integration - Scalable database operations and data management
 - 🔗 RESTful Endpoints - Clean API architecture for all platform interactions
 
@@ -89,8 +89,8 @@ Each component requires specific environment variables. Create `.env` files in r
 VITE_BACKEND_URL=http://localhost:3000
 VITE_ADMIN_EMAIL=admin@nahi.toilets
 VITE_ADMIN_PASSWORD=Admin@12345
-VITE_MODERATOR_EMAIL=demo-moderator@nahi.toilets
-VITE_MODERATOR_PASSWORD=Demo@12345
+VITE_OPERATOR_EMAIL=demo-operator@nahi.toilets
+VITE_OPERATOR_PASSWORD=Demo@12345
 ```
 
 ### Backend (.env)
@@ -104,8 +104,8 @@ EMAIL=your_email@gmail.com
 EMAIL_PASSWORD=your_google_app_password
 ADMIN_EMAIL=admin@nahi.toilets
 ADMIN_PASSWORD=Admin@12345
-MODERATOR_EMAIL=demo-moderator@nahi.toilets
-MODERATOR_PASSWORD=Demo@12345
+OPERATOR_EMAIL=demo-operator@nahi.toilets
+OPERATOR_PASSWORD=Demo@12345
 BACKEND_URL=http://localhost:3000
 ```
 
@@ -149,7 +149,7 @@ npx expo start
 - Email: `admin@nahi.toilets`
 - Password: `Admin@12345`
 
-### Moderator Login
+### Operator Login
 
-- Email: `demo-moderator@nahi.toilets`
+- Email: `demo-operator@nahi.toilets`
 - Password: `Demo@12345`

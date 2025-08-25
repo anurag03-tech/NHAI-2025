@@ -3,14 +3,14 @@ const Review = require("../models/reviewModel");
 const Complaint = require("../models/complaintModel");
 const Penalty = require("../models/penaltyModel");
 
-// @desc    Moderator creates a toilet
+// @desc    Operator creates a toilet
 // @route   POST /api/toilets
-// @access  Moderator/Admin
+// @access  Operator/Admin
 exports.createToilet = async (req, res) => {
   try {
     const toilet = await Toilet.create({
       ...req.body,
-      createdBy: req.user._id, // link to moderator/admin
+      createdBy: req.user._id, // link to operator/admin
     });
 
     res.status(201).json({
@@ -22,9 +22,9 @@ exports.createToilet = async (req, res) => {
   }
 };
 
-// @desc    Get toilets for logged-in Moderator (with reviews, complaints & penalties)
+// @desc    Get toilets for logged-in Operator (with reviews, complaints & penalties)
 // @route   GET /api/toilets/my
-// @access  Moderator
+// @access  Operator
 exports.getMyToilets = async (req, res) => {
   try {
     const toilets = await Toilet.find({ createdBy: req.user._id }).lean();
@@ -33,7 +33,7 @@ exports.getMyToilets = async (req, res) => {
       toilets.map(async (toilet) => {
         const reviews = await Review.find({ toilet: toilet._id });
         const complaints = await Complaint.find({ toilet: toilet._id });
-        const penalties = await Penalty.find({ moderator: req.user._id });
+        const penalties = await Penalty.find({ operator: req.user._id });
 
         return {
           ...toilet,
@@ -63,7 +63,7 @@ exports.getAllToiletsWithDetails = async (req, res) => {
       toilets.map(async (toilet) => {
         const reviews = await Review.find({ toilet: toilet._id });
         const complaints = await Complaint.find({ toilet: toilet._id });
-        const penalties = await Penalty.find({ moderator: toilet.createdBy });
+        const penalties = await Penalty.find({ operator: toilet.createdBy });
 
         return {
           ...toilet,
@@ -82,7 +82,7 @@ exports.getAllToiletsWithDetails = async (req, res) => {
 
 // @desc    Get single toilet by ID (with reviews, complaints & penalties)
 // @route   GET /api/toilets/:id
-// @access  Moderator/Admin
+// @access  Operator/Admin
 exports.getToiletById = async (req, res) => {
   try {
     const toilet = await Toilet.findById(req.params.id)

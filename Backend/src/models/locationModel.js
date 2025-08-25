@@ -34,7 +34,7 @@ const ToiletSchema = new mongoose.Schema(
     ],
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User", // Moderator/Admin who added toilet
+      ref: "User", // Operator/Admin who added toilet
       required: true,
     },
   },

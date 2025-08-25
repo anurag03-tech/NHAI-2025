@@ -2,10 +2,10 @@ const express = require("express");
 const router = express.Router();
 const {
   login,
-  createModerator,
+  createOperator,
   logout,
   getCurrentUser,
-  getAllModerators,
+  getAllOperators,
 } = require("../controllers/authController");
 const { protect, authorize } = require("../middlewares/auth");
 
@@ -18,9 +18,9 @@ router.get("/me", protect, getCurrentUser);
 // Logout
 router.post("/logout", protect, logout);
 
-// Create Moderator (Admin only)
-router.post("/create-moderator", protect, authorize("Admin"), createModerator);
-// Get all moderators (Admin only)
-router.get("/moderators", protect, authorize("Admin"), getAllModerators);
+// Create Operator (Admin only)
+router.post("/create-operator", protect, authorize("Admin"), createOperator);
+// Get all operators (Admin only)
+router.get("/operators", protect, authorize("Admin"), getAllOperators);
 
 module.exports = router;

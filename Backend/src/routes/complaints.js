@@ -4,7 +4,7 @@ const {
   addComplaint,
   getComplaints,
   getComplaintsByUsername,
-  getComplaintsByModerator,
+  getComplaintsByOperator,
   getMyComplaints, // 🆕 New
   updateComplaintStatus, // 🆕 New
   getComplaintById, // 🆕 New
@@ -14,32 +14,32 @@ const { protect, authorize } = require("../middlewares/auth");
 // Public: travellers can submit complaints
 router.post("/", addComplaint);
 
-// Admin/Moderator: view all complaints
+// Admin/Operator: view all complaints
 router.get("/", protect, authorize("Admin"), getComplaints);
 
-// 🆕 Moderator: get complaints for their own toilets
-router.get("/my", protect, authorize("Moderator"), getMyComplaints);
+// 🆕 Operator: get complaints for their own toilets
+router.get("/my", protect, authorize("Operator"), getMyComplaints);
 
-// 🆕 Moderator/Admin: get single complaint by ID
-router.get("/:id", protect, authorize("Admin", "Moderator"), getComplaintById);
+// 🆕 Operator/Admin: get single complaint by ID
+router.get("/:id", protect, authorize("Admin", "Operator"), getComplaintById);
 
-// 🆕 Moderator/Admin: update complaint status
+// 🆕 Operator/Admin: update complaint status
 router.patch(
   "/:id/status",
   protect,
-  authorize("Admin", "Moderator"),
+  authorize("Admin", "Operator"),
   updateComplaintStatus
 );
 
 // Public: get complaints by username
 router.get("/user/:username", getComplaintsByUsername);
 
-// Admin/Moderator: get complaints for toilets by moderator
+// Admin/Operator: get complaints for toilets by operator
 router.get(
-  "/moderator/:moderatorId",
+  "/operator/:operatorId",
   protect,
-  authorize("Admin", "Moderator"),
-  getComplaintsByModerator
+  authorize("Admin", "Operator"),
+  getComplaintsByOperator
 );
 
 module.exports = router;

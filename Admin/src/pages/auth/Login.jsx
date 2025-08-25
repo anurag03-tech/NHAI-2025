@@ -27,7 +27,7 @@ export default function Login() {
 
   useEffect(() => {
     if (isAuthenticated && user) {
-      if (user.role === "Moderator") {
+      if (user.role === "Operator") {
         navigate("/home");
       } else if (user.role === "Admin") {
         navigate("/home");
@@ -136,27 +136,27 @@ export default function Login() {
                 </div>
               </div>
 
-              {/* Moderator Credentials */}
+              {/* Operator Credentials */}
               <div className="group bg-gradient-to-r from-emerald-50 to-emerald-100 border-2 border-emerald-200 rounded-xl p-4 hover:shadow-lg transition-all duration-300">
                 <div className="flex items-center gap-4">
                   <div className="p-3 bg-emerald-600 rounded-xl shadow-md">
                     <UserCheck className="h-5 w-5 text-white" />
                   </div>
                   <div className="flex-1">
-                    <h4 className="font-bold text-gray-900 mb-1">Moderator</h4>
+                    <h4 className="font-bold text-gray-900 mb-1">Operator</h4>
                     <p className="text-sm text-emerald-700 font-medium">
-                      {import.meta.env.VITE_MODERATOR_EMAIL}
+                      {import.meta.env.VITE_OPERATOR_EMAIL}
                     </p>
                     <p className="text-xs text-gray-600">
-                      Password: {import.meta.env.VITE_MODERATOR_PASSWORD}
+                      Password: {import.meta.env.VITE_OPERATOR_PASSWORD}
                     </p>
                   </div>
                   <button
                     type="button"
                     onClick={() =>
                       handleQuickLogin(
-                        import.meta.env.VITE_MODERATOR_EMAIL,
-                        import.meta.env.VITE_MODERATOR_PASSWORD
+                        import.meta.env.VITE_OPERATOR_EMAIL,
+                        import.meta.env.VITE_OPERATOR_PASSWORD
                       )
                     }
                     className="flex items-center gap-2 px-4 py-2.5 bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 transition-colors shadow-md hover:shadow-lg group-hover:scale-105 transform duration-200 cursor-pointer"

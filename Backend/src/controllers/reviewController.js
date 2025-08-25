@@ -41,12 +41,12 @@ exports.getReviews = async (req, res) => {
   }
 };
 
-// @desc    Get reviews by moderator’s toilets
+// @desc    Get reviews by operator’s toilets
 // @route   GET /api/reviews/my
-// @access  Moderator
+// @access  Operator
 exports.getMyReviews = async (req, res) => {
   try {
-    // find toilets created by this moderator
+    // find toilets created by this operator
     const myToilets = await Toilet.find({ createdBy: req.user._id }).select(
       "_id"
     );

@@ -5,18 +5,18 @@ import LandingPage from "./pages/LandingPage";
 import Login from "./pages/auth/Login";
 import ProtectedRoutes from "./pages/ProtectedRoutes";
 
-// Moderator Components
-import ModeratorHome from "./pages/Moderator/Home";
-import AddToilet from "./pages/Moderator/AddToilet";
-import MyToilets from "./pages/Moderator/MyToilets";
-import Complaints from "./pages/Moderator/Complaints";
-import Reviews from "./pages/Moderator/Reviews";
-import Penalties from "./pages/Moderator/Penalties";
+// Operator Components
+import OperatorHome from "./pages/Operator/Home";
+import AddToilet from "./pages/Operator/AddToilet";
+import MyToilets from "./pages/Operator/MyToilets";
+import Complaints from "./pages/Operator/Complaints";
+import Reviews from "./pages/Operator/Reviews";
+import Penalties from "./pages/Operator/Penalties";
 
 // Admin Components
 import AllToilets from "./pages/NhaiAdmin/AllToilets.jsx";
 import AllComplaints from "./pages/NhaiAdmin/AllComplaints";
-import Moderators from "./pages/NhaiAdmin/Moderators";
+import Operators from "./pages/NhaiAdmin/Operators";
 import AdminPenalties from "./pages/NhaiAdmin/AdminPenalties";
 import Analytics from "./pages/NhaiAdmin/Analytics";
 
@@ -41,15 +41,15 @@ export const router = createBrowserRouter([
         element: (
           <ProtectedRoutes>
             <Dashboard />
-            {/* <ModeratorHome /> */}
+            {/* <OperatorHome /> */}
           </ProtectedRoutes>
         ),
       },
-      // Moderator Routes
+      // Operator Routes
       {
         path: "home/add-toilet",
         element: (
-          <ProtectedRoutes requiredRole="Moderator">
+          <ProtectedRoutes requiredRole="Operator">
             <AddToilet />
           </ProtectedRoutes>
         ),
@@ -57,7 +57,7 @@ export const router = createBrowserRouter([
       {
         path: "home/toilets",
         element: (
-          <ProtectedRoutes requiredRole="Moderator">
+          <ProtectedRoutes requiredRole="Operator">
             <MyToilets />
           </ProtectedRoutes>
         ),
@@ -65,7 +65,7 @@ export const router = createBrowserRouter([
       {
         path: "home/complaints",
         element: (
-          <ProtectedRoutes requiredRole="Moderator">
+          <ProtectedRoutes requiredRole="Operator">
             <Complaints />
           </ProtectedRoutes>
         ),
@@ -73,7 +73,7 @@ export const router = createBrowserRouter([
       {
         path: "home/reviews",
         element: (
-          <ProtectedRoutes requiredRole="Moderator">
+          <ProtectedRoutes requiredRole="Operator">
             <Reviews />
           </ProtectedRoutes>
         ),
@@ -81,7 +81,7 @@ export const router = createBrowserRouter([
       {
         path: "home/penalties",
         element: (
-          <ProtectedRoutes requiredRole="Moderator">
+          <ProtectedRoutes requiredRole="Operator">
             <Penalties />
           </ProtectedRoutes>
         ),
@@ -104,10 +104,10 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: "home/moderators",
+        path: "home/operators",
         element: (
           <ProtectedRoutes requiredRole="Admin">
-            <Moderators />
+            <Operators />
           </ProtectedRoutes>
         ),
       },

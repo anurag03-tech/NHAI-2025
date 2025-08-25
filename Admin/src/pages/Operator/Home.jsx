@@ -19,7 +19,7 @@ import axios from "axios";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
 
-const ModeratorHome = () => {
+const OperatorHome = () => {
   const { user } = useAuth();
   const navigate = useNavigate(); // ✅ Add navigation hook
   const [loading, setLoading] = useState(true);
@@ -169,13 +169,13 @@ const ModeratorHome = () => {
           penalties: penaltyStats,
         });
       } catch (err) {
-        console.error("Error fetching moderator stats:", err);
+        console.error("Error fetching operator stats:", err);
       } finally {
         setLoading(false);
       }
     };
 
-    if (user?.role === "Moderator") fetchStats();
+    if (user?.role === "Operator") fetchStats();
   }, [user]);
 
   // ✅ Updated formatCurrency to show ₹ instead of $ and remove currency symbol option
@@ -542,4 +542,4 @@ const EnhancedStatCard = ({
   </div>
 );
 
-export default ModeratorHome;
+export default OperatorHome;

@@ -39,26 +39,26 @@ import axios from "axios";
 axios.defaults.withCredentials = true;
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
 
-const Moderators = () => {
-  const [moderators, setModerators] = useState([]);
+const Operators = () => {
+  const [operators, setOperators] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
   const [showAddDialog, setShowAddDialog] = useState(false);
-  const [addingModerator, setAddingModerator] = useState(false);
-  const [newModerator, setNewModerator] = useState({ name: "", email: "" });
-  const [createdModerator, setCreatedModerator] = useState(null);
+  const [addingOperator, setAddingOperator] = useState(false);
+  const [newOperator, setNewOperator] = useState({ name: "", email: "" });
+  const [createdOperator, setCreatedOperator] = useState(null);
 
   useEffect(() => {
-    fetchAllModerators();
+    fetchAllOperators();
   }, []);
 
-  const fetchAllModerators = async () => {
+  const fetchAllOperators = async () => {
     try {
       setLoading(true);
-      console.log("Fetching all moderators...");
+      console.log("Fetching all operators...");
 
-      const response = await axios.get(`${BACKEND_URL}/api/auth/moderators`, {
+      const response = await axios.get(`${BACKEND_URL}/api/auth/operators`, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -66,21 +66,21 @@ const Moderators = () => {
 
       console.log("API Response:", response.data);
 
-      // Handle the response structure: { count, moderators }
-      if (response.data && Array.isArray(response.data.moderators)) {
-        setModerators(response.data.moderators);
+      // Handle the response structure: { count, operators }
+      if (response.data && Array.isArray(response.data.operators)) {
+        setOperators(response.data.operators);
         toast.success(
-          `Found ${response.data.count} moderator${
+          `Found ${response.data.count} operator${
             response.data.count !== 1 ? "s" : ""
           }`
         );
       } else {
         console.warn("Unexpected response format:", response.data);
-        setModerators([]);
+        setOperators([]);
         toast.error("Unexpected response format from server");
       }
     } catch (error) {
-      console.error("Error fetching moderators:", error);
+      console.error("Error fetching operators:", error);
       if (error.response) {
         const errorMessage =
           error.response.data?.message ||
@@ -88,28 +88,28 @@ const Moderators = () => {
           `Server error: ${error.response.status}`;
         toast.error(errorMessage);
       } else {
-        toast.error("Failed to fetch moderators. Please try again.");
+        toast.error("Failed to fetch operators. Please try again.");
       }
-      setModerators([]);
+      setOperators([]);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleAddModerator = async () => {
-    if (!newModerator.name.trim() || !newModerator.email.trim()) {
+  const handleAddOperator = async () => {
+    if (!newOperator.name.trim() || !newOperator.email.trim()) {
       toast.error("Please fill in all required fields");
       return;
     }
 
     try {
-      setAddingModerator(true);
+      setAddingOperator(true);
 
       const response = await axios.post(
-        `${BACKEND_URL}/api/auth/create-moderator`,
+        `${BACKEND_URL}/api/auth/create-operator`,
         {
-          name: newModerator.name.trim(),
-          email: newModerator.email.trim(),
+          name: newOperator.name.trim(),
+          email: newOperator.email.trim(),
         },
         {
           headers: {
@@ -118,35 +118,35 @@ const Moderators = () => {
         }
       );
 
-      console.log("Create moderator response:", response.data);
+      console.log("Create operator response:", response.data);
 
-      if (response.data.moderator) {
-        setCreatedModerator({
-          ...response.data.moderator,
+      if (response.data.operator) {
+        setCreatedOperator({
+          ...response.data.operator,
           tempPassword: response.data.tempPassword,
         });
 
-        // Add the new moderator to the list
-        setModerators((prev) => [response.data.moderator, ...prev]);
+        // Add the new operator to the list
+        setOperators((prev) => [response.data.operator, ...prev]);
 
-        toast.success("Moderator created successfully!");
+        toast.success("Operator created successfully!");
 
         // Reset form
-        setNewModerator({ name: "", email: "" });
+        setNewOperator({ name: "", email: "" });
       }
     } catch (error) {
-      console.error("Error creating moderator:", error);
+      console.error("Error creating operator:", error);
       if (error.response) {
         const errorMessage =
           error.response.data?.message ||
           error.response.data?.error ||
           `Server error: ${error.response.status}`;
-        toast.error(`Failed to create moderator: ${errorMessage}`);
+        toast.error(`Failed to create operator: ${errorMessage}`);
       } else {
-        toast.error("Failed to create moderator. Please try again.");
+        toast.error("Failed to create operator. Please try again.");
       }
     } finally {
-      setAddingModerator(false);
+      setAddingOperator(false);
     }
   };
 
@@ -201,16 +201,16 @@ const Moderators = () => {
     }
   };
 
-  // Filter moderators
-  const filteredModerators = moderators.filter((moderator) => {
+  // Filter operators
+  const filteredOperators = operators.filter((operator) => {
     if (!searchTerm) return true;
 
     const searchLower = searchTerm.toLowerCase();
     const matchesSearch =
-      moderator.name?.toLowerCase().includes(searchLower) ||
-      moderator.email?.toLowerCase().includes(searchLower);
+      operator.name?.toLowerCase().includes(searchLower) ||
+      operator.email?.toLowerCase().includes(searchLower);
 
-    // For now, we'll assume all moderators are "Active" since the API doesn't return status
+    // For now, we'll assume all operators are "Active" since the API doesn't return status
     const matchesStatusFilter =
       filterStatus === "all" || filterStatus === "Active";
 
@@ -219,9 +219,9 @@ const Moderators = () => {
 
   // Calculate statistics
   const getStats = () => {
-    const total = moderators.length;
+    const total = operators.length;
     // Since we don't have status from API, we'll assume all are active
-    const active = moderators.length;
+    const active = operators.length;
     const inactive = 0;
     const pending = 0;
 
@@ -240,16 +240,16 @@ const Moderators = () => {
       <div className="p-2">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
           <div className="space-y-1 p-1 py-0">
-            <h1 className="text-3xl font-bold text-blue-500">All Moderators</h1>
+            <h1 className="text-3xl font-bold text-blue-500">All Operators</h1>
             <p className="text-blue-500 text font-medium">
-              View and manage all moderators
+              View and manage all operators
             </p>
           </div>
         </div>
         <div className="flex items-center justify-center min-h-[400px]">
           <div className="text-center">
             <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-blue-500" />
-            <p className="text-gray-600">Loading All Moderators...</p>
+            <p className="text-gray-600">Loading All Operators...</p>
           </div>
         </div>
       </div>
@@ -262,29 +262,29 @@ const Moderators = () => {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
           <div className="space-y-1">
-            <h1 className="text-3xl font-bold text-blue-500">All Moderators</h1>
+            <h1 className="text-3xl font-bold text-blue-500">All Operators</h1>
             <p className="text-blue-500 text font-medium">
-              View and manage all moderators in the system
+              View and manage all operators in the system
             </p>
           </div>
 
-          {/* Add Moderator Button */}
+          {/* Add Operator Button */}
           <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
             <DialogTrigger asChild>
               <Button className="bg-blue-600 hover:bg-blue-700 text-white">
                 <Plus className="h-4 w-4 mr-2" />
-                Add New Moderator
+                Add New Operator
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-md">
               <DialogHeader>
                 <DialogTitle className="flex items-center gap-2">
                   <UserCheck className="h-5 w-5 text-blue-600" />
-                  Added New Moderator
+                  Added New Operator
                 </DialogTitle>
               </DialogHeader>
 
-              {createdModerator ? (
+              {createdOperator ? (
                 // Success state with email notification message
                 <div className="space-y-4">
                   <div className="text-center py-6">
@@ -294,11 +294,11 @@ const Moderators = () => {
                       </div>
                     </div>
                     <h3 className="text-xl font-semibold text-green-800 mb-3">
-                      Moderator Created Successfully!
+                      Operator Created Successfully!
                     </h3>
                     <p className="text-green-700 mb-2">
                       Account has been created for{" "}
-                      <strong>{createdModerator.name}</strong>
+                      <strong>{createdOperator.name}</strong>
                     </p>
                   </div>
 
@@ -311,8 +311,8 @@ const Moderators = () => {
                         </h4>
                         <p className="text-blue-700 text-sm leading-relaxed">
                           Login credentials have been sent to{" "}
-                          <strong>{createdModerator.email}</strong>. Please
-                          inform the moderator to check their email inbox
+                          <strong>{createdOperator.email}</strong>. Please
+                          inform the operator to check their email inbox
                           (including spam folder) for login credentials.
                         </p>
                       </div>
@@ -321,7 +321,7 @@ const Moderators = () => {
 
                   <Button
                     onClick={() => {
-                      setCreatedModerator(null);
+                      setCreatedOperator(null);
                       setShowAddDialog(false);
                     }}
                     className="w-full bg-blue-600 hover:bg-blue-700"
@@ -330,17 +330,17 @@ const Moderators = () => {
                   </Button>
                 </div>
               ) : (
-                // Add moderator form
+                // Add operator form
                 <div className="space-y-4">
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-1">
                       Full Name *
                     </label>
                     <Input
-                      placeholder="Enter moderator's full name"
-                      value={newModerator.name}
+                      placeholder="Enter operator's full name"
+                      value={newOperator.name}
                       onChange={(e) =>
-                        setNewModerator((prev) => ({
+                        setNewOperator((prev) => ({
                           ...prev,
                           name: e.target.value,
                         }))
@@ -355,10 +355,10 @@ const Moderators = () => {
                     </label>
                     <Input
                       type="email"
-                      placeholder="Enter moderator's email"
-                      value={newModerator.email}
+                      placeholder="Enter operator's email"
+                      value={newOperator.email}
                       onChange={(e) =>
-                        setNewModerator((prev) => ({
+                        setNewOperator((prev) => ({
                           ...prev,
                           email: e.target.value,
                         }))
@@ -376,16 +376,16 @@ const Moderators = () => {
                       Cancel
                     </Button>
                     <Button
-                      onClick={handleAddModerator}
-                      disabled={addingModerator}
+                      onClick={handleAddOperator}
+                      disabled={addingOperator}
                       className="flex-1 bg-blue-600 hover:bg-blue-700"
                     >
-                      {addingModerator ? (
+                      {addingOperator ? (
                         <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                       ) : (
                         <Plus className="h-4 w-4 mr-2" />
                       )}
-                      Create Moderator
+                      Create Operator
                     </Button>
                   </div>
                 </div>
@@ -459,14 +459,14 @@ const Moderators = () => {
               </Select>
             </div>
             <Badge variant="outline" className="bg-white p-2">
-              {filteredModerators.length} result
-              {filteredModerators.length !== 1 ? "s" : ""}
+              {filteredOperators.length} result
+              {filteredOperators.length !== 1 ? "s" : ""}
             </Badge>
           </div>
         </div>
 
-        {/* Moderators List */}
-        {filteredModerators.length === 0 ? (
+        {/* Operators List */}
+        {filteredOperators.length === 0 ? (
           <Card className="bg-white/90 backdrop-blur-sm border-0 shadow-md">
             <CardContent className="p-12">
               <div className="text-center">
@@ -476,22 +476,22 @@ const Moderators = () => {
                   </div>
                 </div>
                 <h3 className="text-xl font-semibold text-slate-700 mb-3">
-                  {moderators.length === 0
-                    ? "No Moderators Found"
+                  {operators.length === 0
+                    ? "No Operators Found"
                     : "No Matching Results"}
                 </h3>
                 <p className="text-slate-500 mb-6 max-w-md mx-auto">
-                  {moderators.length === 0
-                    ? "No moderators have been created yet."
+                  {operators.length === 0
+                    ? "No operators have been created yet."
                     : "Try adjusting your search terms or filter criteria."}
                 </p>
-                {moderators.length === 0 && (
+                {operators.length === 0 && (
                   <Button
                     onClick={() => setShowAddDialog(true)}
                     className="bg-blue-600 hover:bg-blue-700 text-white"
                   >
                     <Plus className="h-4 w-4 mr-2" />
-                    Add First Moderator
+                    Add First Operator
                   </Button>
                 )}
               </div>
@@ -499,9 +499,9 @@ const Moderators = () => {
           </Card>
         ) : (
           <div className="space-y-2">
-            {filteredModerators.map((moderator) => (
+            {filteredOperators.map((operator) => (
               <Card
-                key={moderator._id}
+                key={operator._id}
                 className="border-0 shadow-md bg-white p-2"
               >
                 <CardContent className="p-4">
@@ -513,7 +513,7 @@ const Moderators = () => {
                       </div>
                       <div>
                         <h3 className="font-semibold text-slate-800 text-lg">
-                          {moderator.name}
+                          {operator.name}
                         </h3>
                         <Badge
                           variant={getStatusBadgeVariant("Active")}
@@ -535,7 +535,7 @@ const Moderators = () => {
                           </span>
                         </div>
                         <p className="text-sm font-medium text-slate-700">
-                          {moderator.email}
+                          {operator.email}
                         </p>
                       </div>
                     </div>
@@ -550,7 +550,7 @@ const Moderators = () => {
                           </span>
                         </div>
                         <p className="text-sm font-semibold text-slate-700">
-                          {moderator.role}
+                          {operator.role}
                         </p>
                       </div>
                     </div>
@@ -565,7 +565,7 @@ const Moderators = () => {
                           </span>
                         </div>
                         <p className="text-xs font-medium text-slate-700">
-                          {formatDate(moderator.createdAt)}
+                          {formatDate(operator.createdAt)}
                         </p>
                       </div>
                     </div>
@@ -580,4 +580,4 @@ const Moderators = () => {
   );
 };
 
-export default Moderators;
+export default Operators;

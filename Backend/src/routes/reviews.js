@@ -13,7 +13,7 @@ router.post("/", addReview);
 // Admin: get all reviews
 router.get("/", protect, authorize("Admin"), getReviews);
 
-// Moderator: get reviews on their toilets
-router.get("/my", protect, authorize("Moderator"), getMyReviews);
+// Operator: get reviews on their toilets
+router.get("/my", protect, authorize("Operator"), getMyReviews);
 
 module.exports = router;

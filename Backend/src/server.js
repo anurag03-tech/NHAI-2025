@@ -5,7 +5,7 @@ const cors = require("cors");
 const axios = require("axios");
 const connectDB = require("./config/db");
 const seedAdmin = require("./utils/seedAdmin");
-const seedModerator = require("./utils/seedModerator");
+const seedOperator = require("./utils/seedOperator");
 
 dotenv.config();
 connectDB();
@@ -35,7 +35,7 @@ app.use(
 // Seed initial users
 const seedAll = async () => {
   await seedAdmin();
-  await seedModerator();
+  await seedOperator();
 };
 seedAll();
 

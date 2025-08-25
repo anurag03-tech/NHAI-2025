@@ -31,7 +31,7 @@ export default function Sidebar({ isOpen, onClose }) {
 
   // Define menu items based on current user role
   const getMenuItems = () => {
-    if (user?.role === "Moderator") {
+    if (user?.role === "Operator") {
       return [
         { name: "Dashboard", path: "/home", icon: "🏠" },
         { name: "Add Toilet", path: "/home/add-toilet", icon: "🚻" },
@@ -45,7 +45,7 @@ export default function Sidebar({ isOpen, onClose }) {
         { name: "Dashboard", path: "/home", icon: "🏠" },
         { name: "All Toilets", path: "/home/all-toilets", icon: "📍" },
         { name: "All Complaints", path: "/home/all-complaints", icon: "📝" },
-        { name: "Moderators", path: "/home/moderators", icon: "👥" },
+        { name: "Operators", path: "/home/operators", icon: "👥" },
         { name: "Penalties", path: "/home/admin-penalties", icon: "⚠️" },
         { name: "Analytics", path: "/home/analytics", icon: "📊" },
       ];
@@ -67,7 +67,7 @@ export default function Sidebar({ isOpen, onClose }) {
       <div className="flex items-center justify-between p-6 border-b border-gray-700 flex-shrink-0">
         <div>
           <h2 className="text-lg font-semibold text-gray-100">
-            {user.role === "Moderator" ? "Moderator" : "Admin"} Panel
+            {user.role === "Operator" ? "Operator" : "Admin"} Panel
           </h2>
           <p className="text-sm text-gray-400 mt-1">Welcome, {user.name}</p>
         </div>

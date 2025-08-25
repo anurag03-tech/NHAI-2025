@@ -20,8 +20,8 @@ export default function Header({ onToggleSidebar, isSidebarOpen }) {
   };
 
   const getRoleBasedTitle = () => {
-    if (user?.role === "Moderator") {
-      return "Moderator Portal";
+    if (user?.role === "Operator") {
+      return "Operator Portal";
     } else if (user?.role === "Admin") {
       return "NHAI Admin Portal";
     } else {
@@ -30,8 +30,8 @@ export default function Header({ onToggleSidebar, isSidebarOpen }) {
   };
 
   const getPageTitle = () => {
-    if (location.pathname.includes("moderator")) {
-      return "Moderator Dashboard";
+    if (location.pathname.includes("operator")) {
+      return "Operator Dashboard";
     } else if (location.pathname.includes("nhai-admin")) {
       return "NHAI Admin Dashboard";
     } else if (location.pathname === "/login") {
@@ -42,15 +42,15 @@ export default function Header({ onToggleSidebar, isSidebarOpen }) {
   };
 
   const getShortPageTitle = () => {
-    if (location.pathname.includes("moderator")) {
+    if (location.pathname.includes("operator")) {
       return "Dashboard";
     } else if (location.pathname.includes("nhai-admin")) {
       return "Admin";
     } else if (location.pathname === "/login") {
       return "Login";
     } else {
-      return user?.role === "Moderator"
-        ? "Moderator"
+      return user?.role === "Operator"
+        ? "Operator"
         : user?.role === "Admin"
         ? "Admin"
         : "Portal";
