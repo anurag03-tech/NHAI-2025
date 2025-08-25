@@ -13,6 +13,7 @@ connectDB();
 const app = express();
 const PORT = process.env.PORT || 3000;
 const BACKEND_URL = process.env.BACKEND_URL || `http://localhost:${PORT}`;
+const FRONTEND_URL = process.env.FRONTEND_URL;
 
 // Middleware
 app.use(cookieParser());
@@ -54,12 +55,23 @@ app.use("/api/penalties", require("./routes/penalties"));
 // Start server
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
 
-// Self-ping every 18 minutes using axios
+// Self-ping every 10 minutes using axios
 setInterval(async () => {
+  // Keep backend awake
   try {
-    const res = await axios.get(`${BACKEND_URL}/health`);
-    console.log("Keep-alive ping:", res.data.time);
+    const backendRes = await axios.get(`${BACKEND_URL}/health`, {
+      timeout: 60000,
+    });
+    console.log("Backend keep-alive ping:", backendRes.data.time);
   } catch (err) {
-    console.error("Keep-alive failed:", err.message);
+    console.error("Backend keep-alive failed:", err.message);
   }
-}, 1000 * 60 * 18);
+
+  // Keep frontend awake
+  try {
+    await axios.get(FRONTEND_URL, { timeout: 60000 });
+    console.log("Frontend keep-alive ping: OK");
+  } catch (err) {
+    console.error("Frontend keep-alive failed:", err.message);
+  }
+}, 1000 * 60 * 16);
